@@ -6,10 +6,54 @@
     <title>VahanSetu - Smart Parking</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        /* THIS IS THE EXPERT TRICK: PRINT STYLES */
+        #print-sticker { display: none; } /* Hidden on normal screen */
+
+        @media print {
+            /* Hide the whole website */
+            body * { visibility: hidden; }
+            
+            /* Only show the sticker, centered perfectly */
+            #print-sticker, #print-sticker * { visibility: visible; }
+            #print-sticker {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                left: 50%;
+                top: 30%;
+                transform: translate(-50%, -30%);
+                width: 350px;
+                border: 3px solid #1f2937; /* Dark Gray Border */
+                border-radius: 12px;
+                padding: 24px;
+                text-align: center;
+                background-color: white;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans">
 
-    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center">
+    <div id="print-sticker">
+        <h1 style="font-size: 24px; font-weight: bold; color: #4f46e5; margin-bottom: 5px;">VahanSetu</h1>
+        <p style="font-size: 14px; font-weight: bold; color: #ef4444; background: #fee2e2; padding: 4px; border-radius: 4px; margin-bottom: 15px;">SMART PARKING TAG</p>
+        
+        <img id="print-qr-img" src="" alt="QR Code" style="margin: 0 auto; width: 180px; height: 180px;">
+        
+        <h2 id="print-vehicle-num" style="font-size: 22px; font-weight: 800; color: #111827; margin-top: 15px; letter-spacing: 1px;">BR-XX-XXXX</h2>
+        
+        <hr style="margin: 15px 0; border-top: 1px dashed #d1d5db;">
+        
+        <p style="font-size: 14px; font-weight: bold; color: #374151; margin-bottom: 5px;">Is this vehicle parked wrong?</p>
+        <p style="font-size: 12px; color: #6b7280; line-height: 1.4;">Scan this QR code with your phone camera to alert the owner instantly.</p>
+        <p style="font-size: 11px; font-weight: bold; color: #10b981; margin-top: 10px;">100% Anonymous • No phone numbers shared</p>
+    </div>
+
+    <div id="main-ui" class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center">
         <h1 class="text-3xl font-bold text-indigo-600 mb-2">VahanSetu</h1>
         <p class="mb-8 text-gray-500 text-sm">Connect without sharing your mobile number.</p>
 
@@ -26,30 +70,31 @@
             </div>
 
             <h2 class="text-left font-semibold text-gray-700 mb-2">Register Vehicle</h2>
-            <input type="text" id="vehicle-number" placeholder="e.g., BR-XX-XXXX" class="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase font-bold text-gray-700">
+            <input type="text" id="vehicle-number" placeholder="e.g., BR-01-AB-1234" class="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase font-bold text-gray-700">
             
-            <button id="generate-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 shadow-md">
+            <button id="generate-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 shadow-md mb-2">
                 Generate QR Tag
             </button>
             
             <div id="qr-container" class="mt-6 flex flex-col items-center justify-center hidden">
                 <div id="qrcode" class="p-4 bg-white border-2 border-dashed border-gray-300 rounded-lg"></div>
-                <p class="text-green-600 mt-4 font-semibold text-sm">QR Tag Generated! Screenshot or save it.</p>
+                
+                <button id="print-btn" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-md flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg>
+                    Print / Save as PDF
+                </button>
             </div>
 
-            <button id="logout-btn" class="mt-6 text-sm text-red-500 hover:text-red-700 font-medium">
-                Log out
-            </button>
+            <button id="logout-btn" class="mt-6 text-sm text-red-500 hover:text-red-700 font-medium">Log out</button>
         </div>
     </div>
 
     <script type="module">
-        // Import Firebase Auth and Firestore from CDN
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // Your Firebase config
+        // Your exact Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyBxxam2BQmpD3yQ79sI0-WS0dEuPXhldOo",
             authDomain: "vahansetu-d9ea9.firebaseapp.com",
@@ -59,95 +104,81 @@
             appId: "1:899743582502:web:8de33754f6f216747899e7"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        // UI Elements
         const loginSection = document.getElementById('login-section');
         const dashboardSection = document.getElementById('dashboard-section');
-        const loginBtn = document.getElementById('login-btn');
-        const logoutBtn = document.getElementById('logout-btn');
-        const userNameSpan = document.getElementById('user-name');
         const generateBtn = document.getElementById('generate-btn');
+        const printBtn = document.getElementById('print-btn');
         const vehicleInput = document.getElementById('vehicle-number');
-        const qrContainer = document.getElementById('qr-container');
         const qrcodeDiv = document.getElementById('qrcode');
+        const qrContainer = document.getElementById('qr-container');
 
-        // Authentication State
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 loginSection.classList.add('hidden');
                 dashboardSection.classList.remove('hidden');
-                userNameSpan.textContent = user.displayName;
+                document.getElementById('user-name').textContent = user.displayName;
             } else {
                 loginSection.classList.remove('hidden');
                 dashboardSection.classList.add('hidden');
-                qrContainer.classList.add('hidden');
-                vehicleInput.value = '';
             }
         });
 
-        loginBtn.addEventListener('click', async () => {
-            try { await signInWithPopup(auth, provider); } 
-            catch (error) { console.error(error); }
-        });
+        document.getElementById('login-btn').addEventListener('click', async () => await signInWithPopup(auth, provider));
+        document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
 
-        logoutBtn.addEventListener('click', () => { signOut(auth); });
-
-        // Generate QR & Save to Database
         generateBtn.addEventListener('click', async () => {
             const vehicleNum = vehicleInput.value.trim().toUpperCase();
-            const user = auth.currentUser;
+            if (!vehicleNum) return alert("Please enter a vehicle number.");
 
-            if (!vehicleNum) {
-                alert("Please enter a valid vehicle number.");
-                return;
-            }
-
-            // Visual feedback while saving
             generateBtn.textContent = "Generating...";
             generateBtn.disabled = true;
 
             try {
-                // 1. Generate a Unique ID for this specific QR Tag
                 const uniqueId = crypto.randomUUID();
-
-                // 2. Save the data to Firestore in a collection called "vehicles"
+                
                 await setDoc(doc(db, "vehicles", uniqueId), {
                     vehicleNumber: vehicleNum,
-                    ownerUid: user.uid,
-                    ownerEmail: user.email,
+                    ownerUid: auth.currentUser.uid,
                     createdAt: serverTimestamp()
                 });
 
-                // 3. Clear any old QR code
                 qrcodeDiv.innerHTML = "";
                 qrContainer.classList.remove('hidden');
 
-                // 4. Draw the new QR Code pointing to your future scanner page
                 const scanUrl = `https://pankaj2188.github.io/vahansetu/scan.html?id=${uniqueId}`;
                 
                 new QRCode(qrcodeDiv, {
-                    text: scanUrl,
-                    width: 200,
-                    height: 200,
-                    colorDark : "#1f2937", // Dark Gray
-                    colorLight : "#ffffff",
+                    text: scanUrl, width: 180, height: 180,
+                    colorDark : "#1f2937", colorLight : "#ffffff",
                     correctLevel : QRCode.CorrectLevel.H
                 });
 
-                generateBtn.textContent = "Generate Another Tag";
+                // EXPERT TRICK: Copy the QR image and vehicle number to the hidden print sticker
+                setTimeout(() => {
+                    const qrImgElement = qrcodeDiv.querySelector('img');
+                    if (qrImgElement) {
+                        document.getElementById('print-qr-img').src = qrImgElement.src;
+                        document.getElementById('print-vehicle-num').textContent = vehicleNum;
+                    }
+                }, 500); // Wait half a second for QR to render
 
+                generateBtn.textContent = "Generate Another Tag";
             } catch (error) {
-                console.error("Error writing to database: ", error);
-                alert("Error saving data. Check console.");
-                generateBtn.textContent = "Generate QR Tag";
+                console.error(error);
+                alert("Error saving data.");
             } finally {
                 generateBtn.disabled = false;
             }
+        });
+
+        // Trigger the browser's native print dialog
+        printBtn.addEventListener('click', () => {
+            window.print();
         });
     </script>
 </body>
