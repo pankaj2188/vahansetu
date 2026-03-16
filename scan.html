@@ -7,9 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
-        // We will initialize your free EmailJS account here later
         (function() {
-            emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
+            emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); // We'll set this up later
         })();
     </script>
 </head>
@@ -68,7 +67,7 @@
                 </svg>
             </div>
             <h2 class="text-2xl font-bold text-gray-800 mb-2">Alert Sent Securely!</h2>
-            <p class="text-gray-600">The owner has been notified via Dashboard, Email, and Telegram.</p>
+            <p class="text-gray-600">The owner has been notified. Thank you for your patience.</p>
             <p class="text-sm font-bold text-indigo-600 mt-8">Powered by VahanSetu</p>
         </div>
 
@@ -78,6 +77,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
+        // Your specific Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBxxam2BQmpD3yQ79sI0-WS0dEuPXhldOo",
             authDomain: "vahansetu-d9ea9.firebaseapp.com",
@@ -124,10 +124,10 @@
                     const data = docSnap.data();
                     displayVehicleNum.textContent = data.vehicleNumber;
                     
-                    // Fetch dynamic details for the triple alert
                     vehicleOwnerUid = data.ownerUid; 
                     vehicleOwnerEmail = data.ownerEmail || ""; 
-                    vehicleOwnerTelegramId = data.telegramChatId || "5741094554"; // Fallback to your ID for testing
+                    // Fallback to your ID for testing if the user hasn't linked one yet
+                    vehicleOwnerTelegramId = data.telegramChatId || "5741094554"; 
                     
                     loadingState.classList.add('hidden');
                     actionState.classList.remove('hidden');
@@ -151,7 +151,7 @@
             sendAlertBtn.classList.add('opacity-70');
 
             try {
-                // --- TRIGGER 1: THE DASHBOARD ALERT (Firebase) ---
+                // --- TRIGGER 1: FIREBASE DASHBOARD ALERT ---
                 await addDoc(collection(db, "alerts"), {
                     vehicleId: tagId,
                     vehicleNumber: displayVehicleNum.textContent,
@@ -161,24 +161,29 @@
                     createdAt: serverTimestamp()
                 });
 
-                // --- TRIGGER 2: THE TELEGRAM ALERT ---
+                // --- TRIGGER 2: SECURE TELEGRAM ALERT VIA CLOUDFLARE ---
                 if (vehicleOwnerTelegramId) {
-                    const telegramToken = "SECRET_HIDDEN_ON_SERVER";
-                    const telegramMessage = `🚨 *VahanSetu Alert!*\n\n🚘 *Vehicle:* ${displayVehicleNum.textContent}\n⚠️ *Issue:* ${issueType}\n\n📍 Someone is waiting. Please check your vehicle immediately.`;
-                    const telegramUrl = `https://api.telegram.org/bot${telegramToken}/sendMessage?chat_id=${vehicleOwnerTelegramId}&text=${encodeURIComponent(telegramMessage)}&parse_mode=Markdown`;
+                    const cloudflareWorkerUrl = "https://vahansetu-alerts.princekumarsinha2188.workers.dev/";
+                    const alertMessage = `🚨 *VahanSetu Alert!*\n\n🚘 *Vehicle:* ${displayVehicleNum.textContent}\n⚠️ *Issue:* ${issueType}\n\n📍 Someone is waiting. Please check your vehicle immediately.`;
                     
-                    // Send without waiting for the response to keep UI fast
-                    fetch(telegramUrl).catch(err => console.error("Telegram Error:", err));
+                    // We send the data to Cloudflare, Cloudflare safely uses the secret token
+                    fetch(cloudflareWorkerUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chatId: vehicleOwnerTelegramId,
+                            message: alertMessage
+                        })
+                    }).catch(err => console.error("Worker Error:", err));
                 }
 
-                // --- TRIGGER 3: THE EMAIL ALERT (EmailJS) ---
+                // --- TRIGGER 3: EMAIL ALERT (EmailJS) ---
                 if (vehicleOwnerEmail && typeof emailjs !== 'undefined') {
-                    // This will fire once you create your free EmailJS account
                     emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
                         to_email: vehicleOwnerEmail,
                         vehicle_number: displayVehicleNum.textContent,
                         issue: issueType,
-                        reply_to: "no-reply@vahansetu.hinditribune.in"
+                        reply_to: "no-reply@vahansetu.com"
                     }).catch(err => console.error("EmailJS Error:", err));
                 }
 
