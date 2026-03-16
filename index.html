@@ -3,98 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VahanSetu - Smart Parking</title>
+    <title>VahanSetu - Premium Smart Tag</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
-        /* THIS IS THE EXPERT TRICK: PRINT STYLES */
-        #print-sticker { display: none; } /* Hidden on normal screen */
+        /* --- EXPERT LEVEL PRINT & PDF STYLING --- */
+        #print-sticker-wrapper { display: none; } /* Hidden on screen */
 
         @media print {
-            /* Hide the whole website */
+            /* 1. Hide the entire web interface */
             body * { visibility: hidden; }
             
-            /* Only show the sticker, centered perfectly */
-            #print-sticker, #print-sticker * { visibility: visible; }
-            #print-sticker {
-                display: flex;
-                flex-direction: column;
-                position: absolute;
-                left: 50%;
-                top: 30%;
-                transform: translate(-50%, -30%);
-                width: 350px;
-                border: 3px solid #1f2937; /* Dark Gray Border */
-                border-radius: 12px;
-                padding: 24px;
-                text-align: center;
-                background-color: white;
-                -webkit-print-color-adjust: exact;
+            /* 2. Setup the print canvas - No margins, forces color printing */
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            /* 3. Make the sticker visible and style it */
+            #print-sticker-wrapper, #print-sticker-wrapper * { visibility: visible; }
+            #print-sticker-wrapper {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                width: 100vw;
+                height: 100vh;
+                background-color: #f3f4f6; /* Light gray background to define edges */
+                -webkit-print-color-adjust: exact; /* Crucial: Forces color/gradient printing */
                 print-color-adjust: exact;
+            }
+
+            /* 4. THE PREMIUM PRINTABLE CARD */
+            #print-card {
+                width: 380px; /* Perfect sticker size */
+                background: white;
+                background: linear-gradient(135deg, #ffffff 0%, #eef2ff 100%); /* Subtle premium gradient */
+                border: 1px solid #c7d2fe;
+                border-radius: 20px;
+                padding: 30px;
+                text-align: center;
+                box-shadow: 0 10px 25px rgba(79, 70, 229, 0.1);
+                position: relative;
+                font-family: 'Helvetica Neue', sans-serif;
+            }
+
+            /* 5. Hindi Text Styling (using generic font to ensure print compatibility) */
+            .hindi-text {
+                font-family: Arial, sans-serif;
+                font-weight: bold;
+                margin-top: 3px;
+                display: block;
             }
         }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans">
 
-    <div id="print-sticker">
-        <h1 style="font-size: 24px; font-weight: bold; color: #4f46e5; margin-bottom: 5px;">VahanSetu</h1>
-        <p style="font-size: 14px; font-weight: bold; color: #ef4444; background: #fee2e2; padding: 4px; border-radius: 4px; margin-bottom: 15px;">SMART PARKING TAG</p>
-        
-        <img id="print-qr-img" src="" alt="QR Code" style="margin: 0 auto; width: 180px; height: 180px;">
-        
-        <h2 id="print-vehicle-num" style="font-size: 22px; font-weight: 800; color: #111827; margin-top: 15px; letter-spacing: 1px;">BR-XX-XXXX</h2>
-        
-        <hr style="margin: 15px 0; border-top: 1px dashed #d1d5db;">
-        
-        <p style="font-size: 14px; font-weight: bold; color: #374151; margin-bottom: 5px;">Is this vehicle parked wrong?</p>
-        <p style="font-size: 12px; color: #6b7280; line-height: 1.4;">Scan this QR code with your phone camera to alert the owner instantly.</p>
-        <p style="font-size: 11px; font-weight: bold; color: #10b981; margin-top: 10px;">100% Anonymous • No phone numbers shared</p>
+    <div id="print-sticker-wrapper">
+        <div id="print-card">
+            
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 5px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 18"></path></svg>
+                <h1 style="font-size: 28px; font-weight: 800; color: #4f46e5; margin: 0; letter-spacing: -1px;">VahanSetu</h1>
+            </div>
+            
+            <p style="font-size: 13px; color: #4338ca; margin-bottom: 20px; font-weight: 600;">Connecting Vehicles, Protecting Privacy</p>
+            
+            <div style="padding: 15px; background: white; display: inline-block; border-radius: 15px; border: 1px solid #e0e7ff; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 15px;">
+                <img id="print-qr-img" src="" alt="VahanSetu QR" style="width: 180px; height: 180px;">
+            </div>
+            
+            <h2 id="print-vehicle-num" style="font-size: 24px; font-weight: 900; color: #111827; margin: 0; text-transform: uppercase; letter-spacing: 2px;">BR-01-AB-1234</h2>
+            
+            <hr style="margin: 20px 0; border: 0; border-top: 1px dashed #c7d2fe;">
+            
+            <div style="text-align: left; background: white; padding: 15px; border-radius: 10px; border: 1px solid #e0e7ff;">
+                <div style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px;">
+                    <svg style="margin-top: 3px; flex-shrink: 0;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    <div>
+                        <p style="font-size: 14px; font-weight: bold; color: #1f2937; margin: 0;">Is this vehicle parked wrong?</p>
+                        <p class="hindi-text" style="font-size: 14px; color: #1f2937;">क्या यह वाहन गलत पार्क है?</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; align-items: flex-start;">
+                    <svg style="margin-top: 3px; flex-shrink: 0;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 01.7 2.81 2 2 0 01-.45 1.11L8.09 9.91a16 16 0 006 6l2.28-2.28a2 2 0 011.11-.45 12.84 12.84 0 012.81.7A2 2 0 0122 16.92z"></path></svg>
+                    <div>
+                        <p style="font-size: 14px; font-weight: bold; color: #1f2937; margin: 0;">Scan to contact owner anonymously.</p>
+                        <p class="hindi-text" style="font-size: 14px; color: #1f2937;">मालिक से गुप्त रूप से संपर्क करने के लिए स्कैन करें।</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px; font-size: 11px; font-weight: bold; color: #6366f1; background: #e0e7ff; padding: 6px; border-radius: 6px;">
+                100% Secure • No Mobile Numbers Exchanged
+            </div>
+        </div>
     </div>
 
-    <div id="main-ui" class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center">
-        <h1 class="text-3xl font-bold text-indigo-600 mb-2">VahanSetu</h1>
-        <p class="mb-8 text-gray-500 text-sm">Connect without sharing your mobile number.</p>
+    <div id="main-ui" class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md text-center border border-gray-100">
+        <h1 class="text-4xl font-extrabold text-indigo-600 mb-2 tracking-tighter">VahanSetu</h1>
+        <p class="mb-8 text-gray-500 text-sm px-4">Connecting Vehicles, Protecting Privacy</p>
 
         <div id="login-section">
-            <button id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 shadow-md">
+            <button id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 px-4 rounded-xl transition duration-200 shadow-md flex items-center justify-center gap-3">
+                <img src="https://authjs.dev/img/providers/google.svg" alt="G" class="h-5">
                 Sign in with Google
             </button>
         </div>
 
         <div id="dashboard-section" class="hidden">
-            <div class="bg-gray-50 p-4 rounded-lg mb-6 text-left border border-gray-100">
-                <p class="text-sm text-gray-600">Welcome,</p>
-                <p id="user-name" class="font-bold text-gray-800 text-lg"></p>
+            <div class="bg-indigo-50 p-5 rounded-xl mb-6 text-left border border-indigo-100">
+                <p class="text-xs text-indigo-500 font-medium">Account</p>
+                <p id="user-name" class="font-bold text-gray-900 text-xl"></p>
             </div>
 
-            <h2 class="text-left font-semibold text-gray-700 mb-2">Register Vehicle</h2>
-            <input type="text" id="vehicle-number" placeholder="e.g., BR-01-AB-1234" class="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase font-bold text-gray-700">
-            
-            <button id="generate-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 shadow-md mb-2">
-                Generate QR Tag
-            </button>
-            
-            <div id="qr-container" class="mt-6 flex flex-col items-center justify-center hidden">
-                <div id="qrcode" class="p-4 bg-white border-2 border-dashed border-gray-300 rounded-lg"></div>
+            <div class="text-left mb-6">
+                <label class="font-semibold text-gray-700 mb-1 block">Vehicle Number</label>
+                <input type="text" id="vehicle-number" placeholder="e.g., BR-01-AB-1234" class="w-full border border-gray-300 p-4 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-300 uppercase font-bold text-gray-800 text-lg placeholder:font-normal placeholder:text-gray-400">
                 
-                <button id="print-btn" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-md flex items-center justify-center gap-2">
+                <button id="generate-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3.5 px-4 rounded-xl transition duration-200 shadow-md">
+                    Generate Premium QR Tag
+                </button>
+            </div>
+            
+            <div id="qr-container" class="mt-6 flex flex-col items-center justify-center hidden bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                <div id="qrcode" class="p-4 bg-white border border-gray-200 rounded-xl shadow-inner"></div>
+                
+                <button id="print-btn" class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-lg flex items-center justify-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg>
-                    Print / Save as PDF
+                    Print or Save Premium Tag
                 </button>
             </div>
 
-            <button id="logout-btn" class="mt-6 text-sm text-red-500 hover:text-red-700 font-medium">Log out</button>
+            <button id="logout-btn" class="mt-8 text-sm text-red-500 hover:text-red-700 font-medium hover:underline">Log out</button>
         </div>
     </div>
 
     <script type="module">
+        // Standard Firebase Modular CDN imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // Your exact Firebase config
+        // Your specific Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBxxam2BQmpD3yQ79sI0-WS0dEuPXhldOo",
             authDomain: "vahansetu-d9ea9.firebaseapp.com",
@@ -133,50 +186,51 @@
 
         generateBtn.addEventListener('click', async () => {
             const vehicleNum = vehicleInput.value.trim().toUpperCase();
-            if (!vehicleNum) return alert("Please enter a vehicle number.");
+            if (!vehicleNum) return alert("कृपया वाहन नंबर दर्ज करें। (Please enter a vehicle number).");
 
-            generateBtn.textContent = "Generating...";
+            generateBtn.textContent = "Generating Tag...";
             generateBtn.disabled = true;
 
             try {
+                // Generate Unique ID and save to Firestore
                 const uniqueId = crypto.randomUUID();
-                
                 await setDoc(doc(db, "vehicles", uniqueId), {
                     vehicleNumber: vehicleNum,
                     ownerUid: auth.currentUser.uid,
                     createdAt: serverTimestamp()
                 });
 
+                // Clear old QR and show container
                 qrcodeDiv.innerHTML = "";
                 qrContainer.classList.remove('hidden');
 
+                // Generate the QR Code pointing to scan.html
                 const scanUrl = `https://pankaj2188.github.io/vahansetu/scan.html?id=${uniqueId}`;
-                
                 new QRCode(qrcodeDiv, {
                     text: scanUrl, width: 180, height: 180,
                     colorDark : "#1f2937", colorLight : "#ffffff",
-                    correctLevel : QRCode.CorrectLevel.H
+                    correctLevel : QRCode.CorrectLevel.H // High error correction for printed stickers
                 });
 
-                // EXPERT TRICK: Copy the QR image and vehicle number to the hidden print sticker
+                // EXPERT TRICK: Copy the generated QR image and vehicle number to the premium hidden print card
                 setTimeout(() => {
                     const qrImgElement = qrcodeDiv.querySelector('img');
                     if (qrImgElement) {
                         document.getElementById('print-qr-img').src = qrImgElement.src;
                         document.getElementById('print-vehicle-num').textContent = vehicleNum;
                     }
-                }, 500); // Wait half a second for QR to render
+                }, 600); // Give QR time to render
 
                 generateBtn.textContent = "Generate Another Tag";
             } catch (error) {
                 console.error(error);
-                alert("Error saving data.");
+                alert("डाटा सेव करने में त्रुटि हुई। (Error saving data).");
             } finally {
                 generateBtn.disabled = false;
             }
         });
 
-        // Trigger the browser's native print dialog
+        // Trigger the print dialog
         printBtn.addEventListener('click', () => {
             window.print();
         });
