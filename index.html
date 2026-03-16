@@ -218,6 +218,42 @@
                 
                 alertsList.innerHTML = html;
             });
+            import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging.js";
+
+const messaging = getMessaging(app);
+
+// Function to activate push notifications
+async function requestPermission(uid) {
+    console.log('Requesting permission...');
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+        console.log('Notification permission granted.');
+        
+        // Get the specific token for this phone
+        const token = await getToken(messaging, { 
+            vapidKey: 'BNSiw6x3JhA5KAYvjZRxEVtpYXPsrnnnmBRndMqrw3aoI-Uw8UtPNF14QPJMNCv-_YNU_MDhQRumBBlvkXRDU6w' 
+        });
+
+        if (token) {
+            // Save this token to the user's profile in Firestore
+            await setDoc(doc(db, "users", uid), {
+                fcmToken: token,
+                email: auth.currentUser.email
+            }, { merge: true });
+            console.log("Push Token saved to DB");
+        }
+    } else {
+        console.log('Unable to get permission to notify.');
+    }
+}
+
+// Trigger this when the user logs in
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // ... your existing code ...
+        requestPermission(user.uid); 
+    }
+});
         }
     </script>
 </body>
