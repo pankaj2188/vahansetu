@@ -9,145 +9,103 @@
 
     <style>
         /* --- EXPERT LEVEL PRINT & PDF STYLING --- */
-        #print-sticker-wrapper { display: none; } /* Hidden on screen */
-
+        #print-sticker-wrapper { display: none; }
         @media print {
-            /* 1. Hide the entire web interface */
             body * { visibility: hidden; }
-            
-            /* 2. Setup the print canvas - No margins, forces color printing */
-            @page {
-                size: A4 portrait;
-                margin: 0;
-            }
-
-            /* 3. Make the sticker visible and style it */
+            @page { size: A4 portrait; margin: 0; }
             #print-sticker-wrapper, #print-sticker-wrapper * { visibility: visible; }
             #print-sticker-wrapper {
-                display: flex !important;
-                align-items: center;
-                justify-content: center;
-                width: 100vw;
-                height: 100vh;
-                background-color: #f3f4f6; /* Light gray background to define edges */
-                -webkit-print-color-adjust: exact; /* Crucial: Forces color/gradient printing */
-                print-color-adjust: exact;
+                display: flex !important; align-items: center; justify-content: center;
+                width: 100vw; height: 100vh; background-color: #f3f4f6;
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
             }
-
-            /* 4. THE PREMIUM PRINTABLE CARD */
             #print-card {
-                width: 380px; /* Perfect sticker size */
-                background: white;
-                background: linear-gradient(135deg, #ffffff 0%, #eef2ff 100%); /* Subtle premium gradient */
-                border: 1px solid #c7d2fe;
-                border-radius: 20px;
-                padding: 30px;
-                text-align: center;
-                box-shadow: 0 10px 25px rgba(79, 70, 229, 0.1);
-                position: relative;
-                font-family: 'Helvetica Neue', sans-serif;
-            }
-
-            /* 5. Hindi Text Styling (using generic font to ensure print compatibility) */
-            .hindi-text {
-                font-family: Arial, sans-serif;
-                font-weight: bold;
-                margin-top: 3px;
-                display: block;
+                width: 380px; background: linear-gradient(135deg, #ffffff 0%, #eef2ff 100%);
+                border: 1px solid #c7d2fe; border-radius: 20px; padding: 30px;
+                text-align: center; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.1); position: relative;
             }
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans py-10">
 
     <div id="print-sticker-wrapper">
         <div id="print-card">
-            
-            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 5px;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 18"></path></svg>
-                <h1 style="font-size: 28px; font-weight: 800; color: #4f46e5; margin: 0; letter-spacing: -1px;">VahanSetu</h1>
-            </div>
-            
-            <p style="font-size: 13px; color: #4338ca; margin-bottom: 20px; font-weight: 600;">Connecting Vehicles, Protecting Privacy</p>
-            
-            <div style="padding: 15px; background: white; display: inline-block; border-radius: 15px; border: 1px solid #e0e7ff; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 15px;">
+            <h1 style="font-size: 28px; font-weight: 800; color: #4f46e5; margin-bottom: 5px;">VahanSetu</h1>
+            <p style="font-size: 13px; color: #4338ca; margin-bottom: 20px;">Connecting Vehicles, Protecting Privacy</p>
+            <div style="padding: 15px; background: white; display: inline-block; border-radius: 15px; border: 1px solid #e0e7ff; margin-bottom: 15px;">
                 <img id="print-qr-img" src="" alt="VahanSetu QR" style="width: 180px; height: 180px;">
             </div>
-            
-            <h2 id="print-vehicle-num" style="font-size: 24px; font-weight: 900; color: #111827; margin: 0; text-transform: uppercase; letter-spacing: 2px;">BR-01-AB-1234</h2>
-            
+            <h2 id="print-vehicle-num" style="font-size: 24px; font-weight: 900; color: #111827; margin: 0; letter-spacing: 2px;">BR-01-AB-1234</h2>
             <hr style="margin: 20px 0; border: 0; border-top: 1px dashed #c7d2fe;">
-            
-            <div style="text-align: left; background: white; padding: 15px; border-radius: 10px; border: 1px solid #e0e7ff;">
-                <div style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px;">
-                    <svg style="margin-top: 3px; flex-shrink: 0;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                    <div>
-                        <p style="font-size: 14px; font-weight: bold; color: #1f2937; margin: 0;">Is this vehicle parked wrong?</p>
-                        <p class="hindi-text" style="font-size: 14px; color: #1f2937;">क्या यह वाहन गलत पार्क है?</p>
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 10px; align-items: flex-start;">
-                    <svg style="margin-top: 3px; flex-shrink: 0;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 01.7 2.81 2 2 0 01-.45 1.11L8.09 9.91a16 16 0 006 6l2.28-2.28a2 2 0 011.11-.45 12.84 12.84 0 012.81.7A2 2 0 0122 16.92z"></path></svg>
-                    <div>
-                        <p style="font-size: 14px; font-weight: bold; color: #1f2937; margin: 0;">Scan to contact owner anonymously.</p>
-                        <p class="hindi-text" style="font-size: 14px; color: #1f2937;">मालिक से गुप्त रूप से संपर्क करने के लिए स्कैन करें।</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="margin-top: 20px; font-size: 11px; font-weight: bold; color: #6366f1; background: #e0e7ff; padding: 6px; border-radius: 6px;">
-                100% Secure • No Mobile Numbers Exchanged
-            </div>
+            <p style="font-size: 14px; font-weight: bold; color: #1f2937;">Is this vehicle parked wrong?</p>
+            <p style="font-size: 14px; color: #1f2937; margin-bottom: 10px;">क्या यह वाहन गलत पार्क है?</p>
+            <p style="font-size: 14px; font-weight: bold; color: #10b981;">Scan to contact owner anonymously.</p>
         </div>
     </div>
 
-    <div id="main-ui" class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md text-center border border-gray-100">
-        <h1 class="text-4xl font-extrabold text-indigo-600 mb-2 tracking-tighter">VahanSetu</h1>
-        <p class="mb-8 text-gray-500 text-sm px-4">Connecting Vehicles, Protecting Privacy</p>
+    <div id="main-ui" class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
+        <div class="text-center">
+            <h1 class="text-4xl font-extrabold text-indigo-600 mb-2 tracking-tighter">VahanSetu</h1>
+            <p class="mb-8 text-gray-500 text-sm">Connecting Vehicles, Protecting Privacy</p>
+        </div>
 
         <div id="login-section">
             <button id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 px-4 rounded-xl transition duration-200 shadow-md flex items-center justify-center gap-3">
-                <img src="https://authjs.dev/img/providers/google.svg" alt="G" class="h-5">
+                <svg class="h-5 w-5 bg-white rounded-full p-0.5" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
                 Sign in with Google
             </button>
         </div>
 
         <div id="dashboard-section" class="hidden">
-            <div class="bg-indigo-50 p-5 rounded-xl mb-6 text-left border border-indigo-100">
-                <p class="text-xs text-indigo-500 font-medium">Account</p>
-                <p id="user-name" class="font-bold text-gray-900 text-xl"></p>
+            <div class="bg-indigo-50 p-4 rounded-xl mb-6 text-left border border-indigo-100 flex justify-between items-center">
+                <div>
+                    <p class="text-xs text-indigo-500 font-medium">Logged in as</p>
+                    <p id="user-name" class="font-bold text-gray-900"></p>
+                </div>
+                <button id="logout-btn" class="text-xs text-red-500 hover:text-red-700 font-bold bg-white px-3 py-1 rounded-lg border border-red-100 shadow-sm">Logout</button>
             </div>
 
-            <div class="text-left mb-6">
-                <label class="font-semibold text-gray-700 mb-1 block">Vehicle Number</label>
-                <input type="text" id="vehicle-number" placeholder="e.g., BR-01-AB-1234" class="w-full border border-gray-300 p-4 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-300 uppercase font-bold text-gray-800 text-lg placeholder:font-normal placeholder:text-gray-400">
-                
-                <button id="generate-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3.5 px-4 rounded-xl transition duration-200 shadow-md">
-                    Generate Premium QR Tag
-                </button>
+            <div class="text-left mb-8">
+                <label class="font-semibold text-gray-700 mb-1 block">Register Vehicle</label>
+                <div class="flex gap-2">
+                    <input type="text" id="vehicle-number" placeholder="e.g., BR-01-AB-1234" class="w-full border border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300 uppercase font-bold text-gray-800">
+                    <button id="generate-btn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition duration-200 shadow-md whitespace-nowrap">
+                        Get Tag
+                    </button>
+                </div>
             </div>
             
-            <div id="qr-container" class="mt-6 flex flex-col items-center justify-center hidden bg-gray-50 p-6 rounded-2xl border border-gray-100">
-                <div id="qrcode" class="p-4 bg-white border border-gray-200 rounded-xl shadow-inner"></div>
-                
-                <button id="print-btn" class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-lg flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg>
-                    Print or Save Premium Tag
+            <div id="qr-container" class="mb-8 flex flex-col items-center justify-center hidden bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                <div id="qrcode" class="p-2 bg-white border border-gray-200 rounded-xl shadow-inner mb-3"></div>
+                <button id="print-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-xl transition duration-200 shadow flex items-center justify-center gap-2">
+                    Print Premium Tag
                 </button>
             </div>
 
-            <button id="logout-btn" class="mt-8 text-sm text-red-500 hover:text-red-700 font-medium hover:underline">Log out</button>
+            <div class="border-t border-gray-200 pt-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-800 text-lg flex items-center gap-2">
+                        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        Live Alerts
+                    </h3>
+                    <span id="alert-badge" class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full hidden">New</span>
+                </div>
+                
+                <div id="alerts-list" class="space-y-3 max-h-60 overflow-y-auto pr-1">
+                    <p class="text-sm text-gray-500 text-center py-4">No alerts yet. Your vehicle is safe!</p>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script type="module">
-        // Standard Firebase Modular CDN imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        // IMPORTING NEW FIRESTORE FUNCTIONS FOR REAL-TIME LISTENING
+        import { getFirestore, doc, setDoc, serverTimestamp, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // Your specific Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBxxam2BQmpD3yQ79sI0-WS0dEuPXhldOo",
             authDomain: "vahansetu-d9ea9.firebaseapp.com",
@@ -164,76 +122,103 @@
 
         const loginSection = document.getElementById('login-section');
         const dashboardSection = document.getElementById('dashboard-section');
-        const generateBtn = document.getElementById('generate-btn');
-        const printBtn = document.getElementById('print-btn');
-        const vehicleInput = document.getElementById('vehicle-number');
-        const qrcodeDiv = document.getElementById('qrcode');
-        const qrContainer = document.getElementById('qr-container');
+        const alertsList = document.getElementById('alerts-list');
+        let unsubscribeAlerts = null; // To stop listening when logged out
 
+        // AUTHENTICATION STATE
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 loginSection.classList.add('hidden');
                 dashboardSection.classList.remove('hidden');
                 document.getElementById('user-name').textContent = user.displayName;
+                startListeningForAlerts(user.uid); // Start fetching alerts!
             } else {
                 loginSection.classList.remove('hidden');
                 dashboardSection.classList.add('hidden');
+                if (unsubscribeAlerts) unsubscribeAlerts(); // Stop listening
             }
         });
 
         document.getElementById('login-btn').addEventListener('click', async () => await signInWithPopup(auth, provider));
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
 
-        generateBtn.addEventListener('click', async () => {
+        // GENERATE QR CODE
+        document.getElementById('generate-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('generate-btn');
+            const vehicleInput = document.getElementById('vehicle-number');
             const vehicleNum = vehicleInput.value.trim().toUpperCase();
-            if (!vehicleNum) return alert("कृपया वाहन नंबर दर्ज करें। (Please enter a vehicle number).");
+            if (!vehicleNum) return alert("Please enter a vehicle number.");
 
-            generateBtn.textContent = "Generating Tag...";
-            generateBtn.disabled = true;
+            btn.textContent = "..."; btn.disabled = true;
 
             try {
-                // Generate Unique ID and save to Firestore
                 const uniqueId = crypto.randomUUID();
                 await setDoc(doc(db, "vehicles", uniqueId), {
-                    vehicleNumber: vehicleNum,
-                    ownerUid: auth.currentUser.uid,
-                    createdAt: serverTimestamp()
+                    vehicleNumber: vehicleNum, ownerUid: auth.currentUser.uid, createdAt: serverTimestamp()
                 });
 
-                // Clear old QR and show container
+                const qrcodeDiv = document.getElementById('qrcode');
                 qrcodeDiv.innerHTML = "";
-                qrContainer.classList.remove('hidden');
+                document.getElementById('qr-container').classList.remove('hidden');
 
-                // Generate the QR Code pointing to scan.html
                 const scanUrl = `https://pankaj2188.github.io/vahansetu/scan.html?id=${uniqueId}`;
-                new QRCode(qrcodeDiv, {
-                    text: scanUrl, width: 180, height: 180,
-                    colorDark : "#1f2937", colorLight : "#ffffff",
-                    correctLevel : QRCode.CorrectLevel.H // High error correction for printed stickers
+                new QRCode(qrcodeDiv, { text: scanUrl, width: 150, height: 150, colorDark : "#1f2937", colorLight : "#ffffff" });
+
+                setTimeout(() => {
+                    document.getElementById('print-qr-img').src = qrcodeDiv.querySelector('img').src;
+                    document.getElementById('print-vehicle-num').textContent = vehicleNum;
+                }, 600);
+
+            } catch (error) { console.error(error); alert("Error generating tag."); }
+            btn.textContent = "Get Tag"; btn.disabled = false;
+        });
+
+        document.getElementById('print-btn').addEventListener('click', () => window.print());
+
+        // --- NEW: REAL-TIME ALERTS LISTENER ---
+        function startListeningForAlerts(uid) {
+            // Query alerts belonging to this specific user
+            const q = query(collection(db, "alerts"), where("ownerUid", "==", uid));
+            
+            // onSnapshot listens for database changes in real-time
+            unsubscribeAlerts = onSnapshot(q, (snapshot) => {
+                const alerts = [];
+                snapshot.forEach((doc) => {
+                    alerts.push({ id: doc.id, ...doc.data() });
                 });
 
-                // EXPERT TRICK: Copy the generated QR image and vehicle number to the premium hidden print card
-                setTimeout(() => {
-                    const qrImgElement = qrcodeDiv.querySelector('img');
-                    if (qrImgElement) {
-                        document.getElementById('print-qr-img').src = qrImgElement.src;
-                        document.getElementById('print-vehicle-num').textContent = vehicleNum;
-                    }
-                }, 600); // Give QR time to render
+                // Sort newest first (using JS to avoid complex Firebase indexing setups)
+                alerts.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
 
-                generateBtn.textContent = "Generate Another Tag";
-            } catch (error) {
-                console.error(error);
-                alert("डाटा सेव करने में त्रुटि हुई। (Error saving data).");
-            } finally {
-                generateBtn.disabled = false;
-            }
-        });
+                if (alerts.length === 0) {
+                    alertsList.innerHTML = `<p class="text-sm text-gray-500 text-center py-4">No alerts yet. Your vehicle is safe!</p>`;
+                    return;
+                }
 
-        // Trigger the print dialog
-        printBtn.addEventListener('click', () => {
-            window.print();
-        });
+                // Show the red badge if there are alerts
+                document.getElementById('alert-badge').classList.remove('hidden');
+
+                // Build the HTML for the alerts
+                let html = '';
+                alerts.forEach(alert => {
+                    // Format the date nicely
+                    const dateObj = alert.createdAt ? alert.createdAt.toDate() : new Date();
+                    const timeString = dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    const dateString = dateObj.toLocaleDateString();
+
+                    html += `
+                    <div class="bg-red-50 border-l-4 border-red-500 p-3 rounded shadow-sm">
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="font-bold text-gray-900">${alert.vehicleNumber}</span>
+                            <span class="text-xs text-gray-500">${dateString} ${timeString}</span>
+                        </div>
+                        <p class="text-sm text-red-700 font-semibold">${alert.issue}</p>
+                    </div>`;
+                });
+                
+                alertsList.innerHTML = html;
+            });
+        }
     </script>
 </body>
 </html>
