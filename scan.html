@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VahanSetu - Alert Vehicle Owner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans p-4">
+
+    <div class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md border border-gray-100 relative overflow-hidden">
+        
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-extrabold text-indigo-600 tracking-tighter">VahanSetu</h1>
+            <p class="text-gray-500 text-sm">Secure & Anonymous Contact</p>
+        </div>
+
+        <div id="loading-state" class="text-center py-10">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+            <p class="text-gray-600 font-medium">Fetching vehicle details...</p>
+        </div>
+
+        <div id="error-state" class="hidden text-center py-10">
+            <svg class="h-16 w-16 text-red-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h2 class="text-xl font-bold text-gray-800 mb-2">Invalid QR Code</h2>
+            <p class="text-gray-500">This vehicle tag is not registered in our system.</p>
+        </div>
+
+        <div id="action-state" class="hidden">
+            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-center mb-6">
+                <p class="text-xs text-indigo-500 font-bold uppercase tracking-wider mb-1">Vehicle Found</p>
+                <h2 id="display-vehicle-num" class="text-3xl font-black text-gray-900 tracking-widest">BR-XX-XXXX</h2>
+            </div>
+
+            <form id="alert-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">What is the issue?</label>
+                    <select id="issue-type" class="w-full border border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                        <option value="Blocking my vehicle">Blocking my vehicle (मेरा वाहन रोक दिया है)</option>
+                        <option value="Parked in my spot">Parked in my spot (मेरी जगह पर पार्क है)</option>
+                        <option value="Headlights left on">Headlights left on (हेडलाइट चालू है)</option>
+                        <option value="Window left open">Window left open (खिड़की खुली है)</option>
+                        <option value="Other urgent issue">Other urgent issue (अन्य समस्या)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Your Mobile Number (Optional)</label>
+                    <input type="tel" id="scanner-phone" placeholder="So owner can call back" class="w-full border border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <p class="text-xs text-gray-500 mt-1">Leave blank to remain 100% anonymous.</p>
+                </div>
+
+                <button type="submit" id="send-alert-btn" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-4 rounded-xl transition duration-200 shadow-lg shadow-red-500/30 flex justify-center items-center gap-2 mt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                    Notify Owner Now
+                </button>
+            </form>
+        </div>
+
+        <div id="success-state" class="hidden text-center py-8">
+            <div class="bg-green-100 rounded-full p-3 inline-block mb-4">
+                <svg class="h-12 w-12 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Alert Sent!</h2>
+            <p class="text-gray-600">The owner has been notified and should be here shortly.</p>
+            <p class="text-sm font-bold text-indigo-600 mt-6">Powered by VahanSetu</p>
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // Your specific Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxxam2BQmpD3yQ79sI0-WS0dEuPXhldOo",
+            authDomain: "vahansetu-d9ea9.firebaseapp.com",
+            projectId: "vahansetu-d9ea9",
+            storageBucket: "vahansetu-d9ea9.firebasestorage.app",
+            messagingSenderId: "899743582502",
+            appId: "1:899743582502:web:8de33754f6f216747899e7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // UI Elements
+        const loadingState = document.getElementById('loading-state');
+        const errorState = document.getElementById('error-state');
+        const actionState = document.getElementById('action-state');
+        const successState = document.getElementById('success-state');
+        const displayVehicleNum = document.getElementById('display-vehicle-num');
+        const alertForm = document.getElementById('alert-form');
+        const sendAlertBtn = document.getElementById('send-alert-btn');
+
+        // Global variable to store owner UID temporarily
+        let vehicleOwnerUid = "";
+
+        // Function to extract ID from URL (e.g., ?id=12345)
+        function getTagIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        // Initialize Page
+        async function loadVehicleData() {
+            const tagId = getTagIdFromUrl();
+
+            if (!tagId) {
+                loadingState.classList.add('hidden');
+                errorState.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                // Fetch vehicle data from Firestore
+                const docRef = doc(db, "vehicles", tagId);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    displayVehicleNum.textContent = data.vehicleNumber;
+                    vehicleOwnerUid = data.ownerUid; // Save this to send the alert to the right person
+                    
+                    loadingState.classList.add('hidden');
+                    actionState.classList.remove('hidden');
+                } else {
+                    loadingState.classList.add('hidden');
+                    errorState.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error("Error fetching document:", error);
+                alert("Network error. Please try again.");
+            }
+        }
+
+        // Handle Form Submission
+        alertForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const issueType = document.getElementById('issue-type').value;
+            const scannerPhone = document.getElementById('scanner-phone').value.trim();
+            const tagId = getTagIdFromUrl();
+
+            // Update UI to show sending state
+            sendAlertBtn.innerHTML = "Sending Alert...";
+            sendAlertBtn.disabled = true;
+            sendAlertBtn.classList.add('opacity-70');
+
+            try {
+                // Save the alert to a new "alerts" collection in Firestore
+                await addDoc(collection(db, "alerts"), {
+                    vehicleId: tagId,
+                    vehicleNumber: displayVehicleNum.textContent,
+                    ownerUid: vehicleOwnerUid,
+                    issue: issueType,
+                    scannerPhone: scannerPhone || "Anonymous",
+                    status: "unread",
+                    createdAt: serverTimestamp()
+                });
+
+                // Show Success Screen
+                actionState.classList.add('hidden');
+                successState.classList.remove('hidden');
+
+            } catch (error) {
+                console.error("Error sending alert: ", error);
+                alert("Failed to send alert. Please try again.");
+                sendAlertBtn.innerHTML = "Notify Owner Now";
+                sendAlertBtn.disabled = false;
+                sendAlertBtn.classList.remove('opacity-70');
+            }
+        });
+
+        // Run the fetch on page load
+        window.onload = loadVehicleData;
+    </script>
+</body>
+</html>
