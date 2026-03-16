@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VahanSetu - Smart Parking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans">
+
+    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center">
+        <h1 class="text-3xl font-bold text-indigo-600 mb-2">VahanSetu</h1>
+        <p class="mb-8 text-gray-500 text-sm">Connect without sharing your mobile number.</p>
+
+        <div id="login-section">
+            <button id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
+                Sign in with Google
+            </button>
+        </div>
+
+        <div id="dashboard-section" class="hidden">
+            <div class="bg-gray-50 p-4 rounded-lg mb-6 text-left">
+                <p class="text-sm text-gray-600">Welcome,</p>
+                <p id="user-name" class="font-bold text-gray-800 text-lg"></p>
+            </div>
+
+            <h2 class="text-left font-semibold text-gray-700 mb-2">Register Vehicle</h2>
+            <input type="text" id="vehicle-number" placeholder="e.g., BR-XX-XXXX" class="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase">
+            
+            <button id="generate-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
+                Generate QR Tag
+            </button>
+            
+            <div id="qr-container" class="mt-6 flex justify-center">
+                </div>
+
+            <button id="logout-btn" class="mt-6 text-sm text-red-500 hover:underline">
+                Log out
+            </button>
+        </div>
+    </div>
+
+    <script type="module">
+        // Using CDN links so this works perfectly on GitHub Pages
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        // Your exact Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxxam2BQmpD3yQ79sI0-WS0dEuPXhldOo",
+            authDomain: "vahansetu-d9ea9.firebaseapp.com",
+            projectId: "vahansetu-d9ea9",
+            storageBucket: "vahansetu-d9ea9.firebasestorage.app",
+            messagingSenderId: "899743582502",
+            appId: "1:899743582502:web:8de33754f6f216747899e7"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // Get UI Elements
+        const loginSection = document.getElementById('login-section');
+        const dashboardSection = document.getElementById('dashboard-section');
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const userNameSpan = document.getElementById('user-name');
+
+        // Handle Login
+        loginBtn.addEventListener('click', async () => {
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                console.error("Login failed:", error);
+                alert("Login failed. Check the browser console for details.");
+            }
+        });
+
+        // Handle Logout
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth);
+        });
+
+        // Listen for Authentication State Changes
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is logged in: Hide Login, Show Dashboard
+                loginSection.classList.add('hidden');
+                dashboardSection.classList.remove('hidden');
+                userNameSpan.textContent = user.displayName;
+            } else {
+                // User is logged out: Show Login Button, Hide Dashboard
+                loginSection.classList.remove('hidden');
+                dashboardSection.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
