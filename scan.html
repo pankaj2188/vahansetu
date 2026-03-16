@@ -163,7 +163,7 @@
 
                 // --- TRIGGER 2: THE TELEGRAM ALERT ---
                 if (vehicleOwnerTelegramId) {
-                    const telegramToken = "8680989133:AAEw0KvyBB7_bw6jmUGVtuPZIQf4h2zURo4";
+                    const telegramToken = "SECRET_HIDDEN_ON_SERVER";
                     const telegramMessage = `🚨 *VahanSetu Alert!*\n\n🚘 *Vehicle:* ${displayVehicleNum.textContent}\n⚠️ *Issue:* ${issueType}\n\n📍 Someone is waiting. Please check your vehicle immediately.`;
                     const telegramUrl = `https://api.telegram.org/bot${telegramToken}/sendMessage?chat_id=${vehicleOwnerTelegramId}&text=${encodeURIComponent(telegramMessage)}&parse_mode=Markdown`;
                     
