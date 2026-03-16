@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VahanSetu - Smart Parking</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans">
 
@@ -13,39 +14,42 @@
         <p class="mb-8 text-gray-500 text-sm">Connect without sharing your mobile number.</p>
 
         <div id="login-section">
-            <button id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
+            <button id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 shadow-md">
                 Sign in with Google
             </button>
         </div>
 
         <div id="dashboard-section" class="hidden">
-            <div class="bg-gray-50 p-4 rounded-lg mb-6 text-left">
+            <div class="bg-gray-50 p-4 rounded-lg mb-6 text-left border border-gray-100">
                 <p class="text-sm text-gray-600">Welcome,</p>
                 <p id="user-name" class="font-bold text-gray-800 text-lg"></p>
             </div>
 
             <h2 class="text-left font-semibold text-gray-700 mb-2">Register Vehicle</h2>
-            <input type="text" id="vehicle-number" placeholder="e.g., BR-XX-XXXX" class="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase">
+            <input type="text" id="vehicle-number" placeholder="e.g., BR-XX-XXXX" class="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase font-bold text-gray-700">
             
-            <button id="generate-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
+            <button id="generate-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 shadow-md">
                 Generate QR Tag
             </button>
             
-            <div id="qr-container" class="mt-6 flex justify-center">
-                </div>
+            <div id="qr-container" class="mt-6 flex flex-col items-center justify-center hidden">
+                <div id="qrcode" class="p-4 bg-white border-2 border-dashed border-gray-300 rounded-lg"></div>
+                <p class="text-green-600 mt-4 font-semibold text-sm">QR Tag Generated! Screenshot or save it.</p>
+            </div>
 
-            <button id="logout-btn" class="mt-6 text-sm text-red-500 hover:underline">
+            <button id="logout-btn" class="mt-6 text-sm text-red-500 hover:text-red-700 font-medium">
                 Log out
             </button>
         </div>
     </div>
 
     <script type="module">
-        // Using CDN links so this works perfectly on GitHub Pages
+        // Import Firebase Auth and Firestore from CDN
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // Your exact Firebase configuration
+        // Your Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyBxxam2BQmpD3yQ79sI0-WS0dEuPXhldOo",
             authDomain: "vahansetu-d9ea9.firebaseapp.com",
@@ -58,41 +62,91 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        // Get UI Elements
+        // UI Elements
         const loginSection = document.getElementById('login-section');
         const dashboardSection = document.getElementById('dashboard-section');
         const loginBtn = document.getElementById('login-btn');
         const logoutBtn = document.getElementById('logout-btn');
         const userNameSpan = document.getElementById('user-name');
+        const generateBtn = document.getElementById('generate-btn');
+        const vehicleInput = document.getElementById('vehicle-number');
+        const qrContainer = document.getElementById('qr-container');
+        const qrcodeDiv = document.getElementById('qrcode');
 
-        // Handle Login
-        loginBtn.addEventListener('click', async () => {
-            try {
-                await signInWithPopup(auth, provider);
-            } catch (error) {
-                console.error("Login failed:", error);
-                alert("Login failed. Check the browser console for details.");
-            }
-        });
-
-        // Handle Logout
-        logoutBtn.addEventListener('click', () => {
-            signOut(auth);
-        });
-
-        // Listen for Authentication State Changes
+        // Authentication State
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is logged in: Hide Login, Show Dashboard
                 loginSection.classList.add('hidden');
                 dashboardSection.classList.remove('hidden');
                 userNameSpan.textContent = user.displayName;
             } else {
-                // User is logged out: Show Login Button, Hide Dashboard
                 loginSection.classList.remove('hidden');
                 dashboardSection.classList.add('hidden');
+                qrContainer.classList.add('hidden');
+                vehicleInput.value = '';
+            }
+        });
+
+        loginBtn.addEventListener('click', async () => {
+            try { await signInWithPopup(auth, provider); } 
+            catch (error) { console.error(error); }
+        });
+
+        logoutBtn.addEventListener('click', () => { signOut(auth); });
+
+        // Generate QR & Save to Database
+        generateBtn.addEventListener('click', async () => {
+            const vehicleNum = vehicleInput.value.trim().toUpperCase();
+            const user = auth.currentUser;
+
+            if (!vehicleNum) {
+                alert("Please enter a valid vehicle number.");
+                return;
+            }
+
+            // Visual feedback while saving
+            generateBtn.textContent = "Generating...";
+            generateBtn.disabled = true;
+
+            try {
+                // 1. Generate a Unique ID for this specific QR Tag
+                const uniqueId = crypto.randomUUID();
+
+                // 2. Save the data to Firestore in a collection called "vehicles"
+                await setDoc(doc(db, "vehicles", uniqueId), {
+                    vehicleNumber: vehicleNum,
+                    ownerUid: user.uid,
+                    ownerEmail: user.email,
+                    createdAt: serverTimestamp()
+                });
+
+                // 3. Clear any old QR code
+                qrcodeDiv.innerHTML = "";
+                qrContainer.classList.remove('hidden');
+
+                // 4. Draw the new QR Code pointing to your future scanner page
+                const scanUrl = `https://pankaj2188.github.io/vahansetu/scan.html?id=${uniqueId}`;
+                
+                new QRCode(qrcodeDiv, {
+                    text: scanUrl,
+                    width: 200,
+                    height: 200,
+                    colorDark : "#1f2937", // Dark Gray
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+
+                generateBtn.textContent = "Generate Another Tag";
+
+            } catch (error) {
+                console.error("Error writing to database: ", error);
+                alert("Error saving data. Check console.");
+                generateBtn.textContent = "Generate QR Tag";
+            } finally {
+                generateBtn.disabled = false;
             }
         });
     </script>
