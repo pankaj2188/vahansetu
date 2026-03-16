@@ -12,7 +12,7 @@
         
         <div class="text-center mb-6">
             <h1 class="text-3xl font-extrabold text-indigo-600 tracking-tighter">VahanSetu</h1>
-            <p class="text-gray-500 text-sm">Secure & Anonymous Contact</p>
+            <p class="text-gray-500 text-sm font-bold text-emerald-600 mt-1">100% Anonymous Alert</p>
         </div>
 
         <div id="loading-state" class="text-center py-10">
@@ -37,24 +37,19 @@
             <form id="alert-form" class="space-y-4">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">What is the issue?</label>
-                    <select id="issue-type" class="w-full border border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                    <select id="issue-type" class="w-full border border-gray-300 p-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-gray-800 font-medium cursor-pointer shadow-sm">
                         <option value="Blocking my vehicle">Blocking my vehicle (मेरा वाहन रोक दिया है)</option>
-                        <option value="Parked in my spot">Parked in my spot (मेरी जगह पर पार्क है)</option>
+                        <option value="Parked in wrong spot">Parked in wrong spot (गलत जगह पार्क है)</option>
                         <option value="Headlights left on">Headlights left on (हेडलाइट चालू है)</option>
                         <option value="Window left open">Window left open (खिड़की खुली है)</option>
-                        <option value="Other urgent issue">Other urgent issue (अन्य समस्या)</option>
+                        <option value="Vehicle is damaged">Vehicle is damaged (वाहन क्षतिग्रस्त है)</option>
+                        <option value="Urgent: Please move">Urgent: Please move (कृपया तुरंत हटाएं)</option>
                     </select>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Your Mobile Number (Optional)</label>
-                    <input type="tel" id="scanner-phone" placeholder="So owner can call back" class="w-full border border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <p class="text-xs text-gray-500 mt-1">Leave blank to remain 100% anonymous.</p>
-                </div>
-
-                <button type="submit" id="send-alert-btn" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-4 rounded-xl transition duration-200 shadow-lg shadow-red-500/30 flex justify-center items-center gap-2 mt-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
-                    Notify Owner Now
+                <button type="submit" id="send-alert-btn" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-4 rounded-xl transition duration-200 shadow-lg shadow-red-500/30 flex justify-center items-center gap-2 mt-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                    Send Anonymous Alert
                 </button>
             </form>
         </div>
@@ -65,9 +60,9 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
             </div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">Alert Sent!</h2>
-            <p class="text-gray-600">The owner has been notified and should be here shortly.</p>
-            <p class="text-sm font-bold text-indigo-600 mt-6">Powered by VahanSetu</p>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Alert Sent Securely!</h2>
+            <p class="text-gray-600">The owner has been notified and should arrive shortly. Thank you for your patience.</p>
+            <p class="text-sm font-bold text-indigo-600 mt-8">Powered by VahanSetu</p>
         </div>
 
     </div>
@@ -76,7 +71,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // Your specific Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBxxam2BQmpD3yQ79sI0-WS0dEuPXhldOo",
             authDomain: "vahansetu-d9ea9.firebaseapp.com",
@@ -89,7 +83,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // UI Elements
         const loadingState = document.getElementById('loading-state');
         const errorState = document.getElementById('error-state');
         const actionState = document.getElementById('action-state');
@@ -98,16 +91,13 @@
         const alertForm = document.getElementById('alert-form');
         const sendAlertBtn = document.getElementById('send-alert-btn');
 
-        // Global variable to store owner UID temporarily
         let vehicleOwnerUid = "";
 
-        // Function to extract ID from URL (e.g., ?id=12345)
         function getTagIdFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('id');
         }
 
-        // Initialize Page
         async function loadVehicleData() {
             const tagId = getTagIdFromUrl();
 
@@ -118,14 +108,13 @@
             }
 
             try {
-                // Fetch vehicle data from Firestore
                 const docRef = doc(db, "vehicles", tagId);
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     displayVehicleNum.textContent = data.vehicleNumber;
-                    vehicleOwnerUid = data.ownerUid; // Save this to send the alert to the right person
+                    vehicleOwnerUid = data.ownerUid; 
                     
                     loadingState.classList.add('hidden');
                     actionState.classList.remove('hidden');
@@ -139,45 +128,39 @@
             }
         }
 
-        // Handle Form Submission
         alertForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const issueType = document.getElementById('issue-type').value;
-            const scannerPhone = document.getElementById('scanner-phone').value.trim();
             const tagId = getTagIdFromUrl();
 
-            // Update UI to show sending state
-            sendAlertBtn.innerHTML = "Sending Alert...";
+            sendAlertBtn.innerHTML = "Sending...";
             sendAlertBtn.disabled = true;
             sendAlertBtn.classList.add('opacity-70');
 
             try {
-                // Save the alert to a new "alerts" collection in Firestore
+                // Strictly anonymous payload
                 await addDoc(collection(db, "alerts"), {
                     vehicleId: tagId,
                     vehicleNumber: displayVehicleNum.textContent,
                     ownerUid: vehicleOwnerUid,
                     issue: issueType,
-                    scannerPhone: scannerPhone || "Anonymous",
                     status: "unread",
                     createdAt: serverTimestamp()
                 });
 
-                // Show Success Screen
                 actionState.classList.add('hidden');
                 successState.classList.remove('hidden');
 
             } catch (error) {
                 console.error("Error sending alert: ", error);
                 alert("Failed to send alert. Please try again.");
-                sendAlertBtn.innerHTML = "Notify Owner Now";
+                sendAlertBtn.innerHTML = "Send Anonymous Alert";
                 sendAlertBtn.disabled = false;
                 sendAlertBtn.classList.remove('opacity-70');
             }
         });
 
-        // Run the fetch on page load
         window.onload = loadVehicleData;
     </script>
 </body>
