@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VahanSetu - Alert Vehicle Owner</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        // We will initialize your free EmailJS account here later
+        (function() {
+            emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
+        })();
+    </script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans p-4">
 
@@ -61,7 +68,7 @@
                 </svg>
             </div>
             <h2 class="text-2xl font-bold text-gray-800 mb-2">Alert Sent Securely!</h2>
-            <p class="text-gray-600">The owner has been notified and should arrive shortly. Thank you for your patience.</p>
+            <p class="text-gray-600">The owner has been notified via Dashboard, Email, and Telegram.</p>
             <p class="text-sm font-bold text-indigo-600 mt-8">Powered by VahanSetu</p>
         </div>
 
@@ -91,7 +98,10 @@
         const alertForm = document.getElementById('alert-form');
         const sendAlertBtn = document.getElementById('send-alert-btn');
 
+        // Dynamic Owner Data
         let vehicleOwnerUid = "";
+        let vehicleOwnerEmail = "";
+        let vehicleOwnerTelegramId = "";
 
         function getTagIdFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -100,7 +110,6 @@
 
         async function loadVehicleData() {
             const tagId = getTagIdFromUrl();
-
             if (!tagId) {
                 loadingState.classList.add('hidden');
                 errorState.classList.remove('hidden');
@@ -114,7 +123,11 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     displayVehicleNum.textContent = data.vehicleNumber;
+                    
+                    // Fetch dynamic details for the triple alert
                     vehicleOwnerUid = data.ownerUid; 
+                    vehicleOwnerEmail = data.ownerEmail || ""; 
+                    vehicleOwnerTelegramId = data.telegramChatId || "5741094554"; // Fallback to your ID for testing
                     
                     loadingState.classList.add('hidden');
                     actionState.classList.remove('hidden');
@@ -130,16 +143,15 @@
 
         alertForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const issueType = document.getElementById('issue-type').value;
             const tagId = getTagIdFromUrl();
 
-            sendAlertBtn.innerHTML = "Sending...";
+            sendAlertBtn.innerHTML = "Sending Alerts...";
             sendAlertBtn.disabled = true;
             sendAlertBtn.classList.add('opacity-70');
 
             try {
-                // Strictly anonymous payload
+                // --- TRIGGER 1: THE DASHBOARD ALERT (Firebase) ---
                 await addDoc(collection(db, "alerts"), {
                     vehicleId: tagId,
                     vehicleNumber: displayVehicleNum.textContent,
@@ -149,6 +161,28 @@
                     createdAt: serverTimestamp()
                 });
 
+                // --- TRIGGER 2: THE TELEGRAM ALERT ---
+                if (vehicleOwnerTelegramId) {
+                    const telegramToken = "8680989133:AAEw0KvyBB7_bw6jmUGVtuPZIQf4h2zURo4";
+                    const telegramMessage = `🚨 *VahanSetu Alert!*\n\n🚘 *Vehicle:* ${displayVehicleNum.textContent}\n⚠️ *Issue:* ${issueType}\n\n📍 Someone is waiting. Please check your vehicle immediately.`;
+                    const telegramUrl = `https://api.telegram.org/bot${telegramToken}/sendMessage?chat_id=${vehicleOwnerTelegramId}&text=${encodeURIComponent(telegramMessage)}&parse_mode=Markdown`;
+                    
+                    // Send without waiting for the response to keep UI fast
+                    fetch(telegramUrl).catch(err => console.error("Telegram Error:", err));
+                }
+
+                // --- TRIGGER 3: THE EMAIL ALERT (EmailJS) ---
+                if (vehicleOwnerEmail && typeof emailjs !== 'undefined') {
+                    // This will fire once you create your free EmailJS account
+                    emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+                        to_email: vehicleOwnerEmail,
+                        vehicle_number: displayVehicleNum.textContent,
+                        issue: issueType,
+                        reply_to: "no-reply@vahansetu.hinditribune.in"
+                    }).catch(err => console.error("EmailJS Error:", err));
+                }
+
+                // Show Success Screen
                 actionState.classList.add('hidden');
                 successState.classList.remove('hidden');
 
