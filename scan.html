@@ -112,22 +112,22 @@
             return new URLSearchParams(window.location.search).get('id');
         }
 
-        // Fetch GPS Location with a Promise (FULLY FIXED GOOGLE MAPS LINK)
+        // Fetch GPS Location with a Promise (ACTUALLY FIXED GOOGLE MAPS LINK)
         function getGPSLocation() {
             return new Promise((resolve) => {
                 if (!navigator.geolocation) {
-                    // Safe fallback if the browser doesn't support GPS
+                    // Safe fallback to plain Google Maps if no GPS
                     resolve("https://www.google.com/maps");
                 } else {
                     navigator.geolocation.getCurrentPosition(
                         (position) => {
                             const lat = position.coords.latitude;
                             const lon = position.coords.longitude;
-                            // The real, official Google Maps search parameter
+                            // The real, official Google Maps URL
                             resolve(`https://www.google.com/maps?q=${lat},${lon}`);
                         },
                         (error) => {
-                            // Safe fallback if the user hits "Deny" on the location popup
+                            // Safe fallback to plain Google Maps if permission denied
                             resolve("https://www.google.com/maps");
                         },
                         { timeout: 7000 } // Don't wait longer than 7 seconds
@@ -189,7 +189,7 @@
                     createdAt: serverTimestamp()
                 });
 
-                // 3. FIRE THE CLOUDFLARE BACKEND (Bilingual Telegram Payload)
+                // 3. FIRE THE CLOUDFLARE BACKEND
                 const cloudflareWorkerUrl = "https://vahansetu-alerts.princekumarsinha2188.workers.dev/";
                 const alertMessage = `🚨 *VahanSetu Alert / वाहनसेतु अलर्ट!*\n\n🚘 *Vehicle / वाहन:* ${displayVehicleNum.textContent}\n⚠️ *Issue / समस्या:* ${issueType}\n📍 *Location / स्थान:* [View GPS / जीपीएस देखें](${googleMapsLink})\n\nPlease check your vehicle immediately.\nकृपया तुरंत अपने वाहन की जाँच करें।`;
                 
