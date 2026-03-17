@@ -6,6 +6,7 @@
     <title>VahanSetu - Owner Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNGY0NmU1IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTkgMTJsMiAyIDQtNG01LjYxOC00LjAxNkExMS45NTUgMTEuOTU1IDAgMDExMiAyLjk0NGExMS45NTUgMTEuOTU1IDAgMDEtOC42MTggMy4wNEExMi4wMiAxMi4wMiAwIDAwMyA5YzAgNS41OTEgMy44MjQgMTAuMjkgOSAxMS42MjIgNS4xNzYtMS4zMzIgOS02LjAzIDktMTEuNjIyIDAtMS4wNDItLjEzMy0yLjA1Mi0uMzgyLTMuMDE2eiIvPjwvc3ZnPg=="/>
 
     <style>
         /* --- PREMIUM PRINT STYLES --- */
@@ -34,7 +35,6 @@
                 overflow: hidden;
             }
             
-            /* Premium Accent Bar at the top */
             #print-card::before {
                 content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px;
                 background: linear-gradient(90deg, #4f46e5, #ec4899);
@@ -60,7 +60,11 @@
 
             .print-text { font-size: 16px; font-weight: 700; color: #1f2937; margin-bottom: 5px; }
             .print-hindi { font-size: 15px; color: #4b5563; margin-bottom: 15px; }
-            .print-footer { font-size: 14px; font-weight: 800; color: #10b981; background: #d1fae5; padding: 8px 16px; border-radius: 20px; display: inline-block;}
+            
+            /* Updated Footer & Promo Styles */
+            .print-footer { font-size: 14px; font-weight: 800; color: #10b981; background: #d1fae5; padding: 10px 16px; border-radius: 16px; display: inline-block; line-height: 1.4; margin-bottom: 20px; border: 1px solid #a7f3d0; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.1); }
+            .print-promo { font-size: 12px; font-weight: 700; color: #6b7280; padding-top: 15px; border-top: 2px solid #e5e7eb; letter-spacing: 0.5px;}
+            .print-promo strong { color: #4f46e5; }
         }
     </style>
 </head>
@@ -70,19 +74,19 @@
         <div id="print-card">
             <h1 class="print-header">VahanSetu</h1>
             <p class="print-sub">Smart Vehicle Tag</p>
-            
-            <div class="qr-wrapper">
-                <img id="print-qr-img" src="" alt="VahanSetu QR" style="width: 200px; height: 200px;">
-            </div>
-            
-            <div>
-                <div id="print-vehicle-num" class="print-plate">BR-01-AB-1234</div>
-            </div>
-            
+            <div class="qr-wrapper"><img id="print-qr-img" src="" alt="VahanSetu QR" style="width: 200px; height: 200px;"></div>
+            <div><div id="print-vehicle-num" class="print-plate">BR-01-AB-1234</div></div>
             <hr style="margin: 15px 0 20px; border: 0; border-top: 2px dashed #c7d2fe;">
+            
             <p class="print-text">Is this vehicle parked wrong?</p>
             <p class="print-hindi">क्या यह वाहन गलत जगह पार्क है?</p>
-            <p class="print-footer">Scan to alert owner securely</p>
+            
+            <div class="print-footer">
+                Scan to alert owner securely<br>
+                <span style="font-size: 11px; font-weight: 700; color: #059669;">मालिक को अलर्ट करने के लिए स्कैन करें</span>
+            </div>
+            
+            <p class="print-promo">Get your free smart tag at: <strong>vahansetu.blogspot.com</strong></p>
         </div>
     </div>
 
@@ -126,7 +130,24 @@
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 text-center flex flex-col items-center relative overflow-hidden">
                         <div class="absolute top-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
                         <div class="bg-indigo-50 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full mb-4 mt-2 uppercase tracking-wide">Permanent Tag</div>
-                        <h2 id="display-veh-num" class="text-2xl font-black text-gray-900 mb-4 tracking-widest uppercase bg-gray-100 px-4 py-2 rounded-lg border border-gray-200"></h2>
+                        
+                        <div class="w-full flex flex-col items-center mb-4">
+                            <h2 id="display-veh-num" class="text-2xl font-black text-gray-900 tracking-widest uppercase bg-gray-100 px-4 py-2 rounded-lg border border-gray-200 w-full text-center"></h2>
+                            
+                            <div id="edit-veh-container" class="mt-2 w-full hidden flex-col items-center">
+                                <div class="flex w-full gap-2">
+                                    <input type="text" id="edit-veh-input" class="w-full border border-gray-300 p-2 rounded-lg text-sm uppercase font-bold text-center focus:ring-2 focus:ring-indigo-500" placeholder="New Number">
+                                    <button id="save-veh-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-3 rounded-lg text-sm transition">Save</button>
+                                    <button id="cancel-veh-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-3 rounded-lg text-sm transition">X</button>
+                                </div>
+                                <p id="edit-limit-text" class="text-[10px] text-gray-500 mt-2 font-semibold"></p>
+                            </div>
+                            
+                            <button id="show-edit-btn" class="text-[11px] text-indigo-600 font-bold mt-2 hover:text-indigo-800 transition flex items-center gap-1 hidden">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                Fix Vehicle Number
+                            </button>
+                        </div>
                         <div id="qrcode" class="p-3 bg-white border border-indigo-100 rounded-xl mb-4 shadow-inner"></div>
                         <button id="print-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-indigo-500/30 transition flex justify-center items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
@@ -160,7 +181,6 @@
                             
                             <div class="mt-4 pt-4 border-t border-gray-100">
                                 <label class="block text-sm font-bold text-blue-900 mb-2">Connect Telegram Alerts</label>
-                                
                                 <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 mb-3 shadow-inner">
                                     <p class="text-sm font-bold text-blue-800 mb-3 flex items-center gap-2">
                                         <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
@@ -188,7 +208,6 @@
                             Emergency Setup
                         </h3>
                         <p class="text-xs text-red-600 mb-4">Permanent family contacts in case of an accident.</p>
-                        
                         <div class="space-y-4">
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
@@ -218,7 +237,6 @@
                             <p class="text-sm text-gray-400 text-center py-6">No alerts yet. Your vehicle is safe.</p>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -249,8 +267,9 @@
         const activeDashboard = document.getElementById('active-dashboard');
         
         let activeVehicleId = null; 
+        let currentEditCount = 0; 
         let unsubscribeAlerts = null;
-        let isInitialLoad = true; // Tracks the first load of messages
+        let isInitialLoad = true; 
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -285,10 +304,13 @@
                     const vehicleDoc = querySnapshot.docs[0];
                     activeVehicleId = vehicleDoc.id;
                     const data = vehicleDoc.data();
+                    
+                    currentEditCount = data.editCount || 0;
 
                     document.getElementById('display-veh-num').textContent = data.vehicleNumber;
                     document.getElementById('print-vehicle-num').textContent = data.vehicleNumber;
                     renderQRCode(activeVehicleId);
+                    updateEditUI(); 
 
                     document.getElementById('route-email').value = data.alertEmail || auth.currentUser.email;
                     document.getElementById('route-telegram').value = data.telegramChatId || "";
@@ -311,12 +333,73 @@
                     vehicleNumber: vehicleNum, 
                     ownerUid: auth.currentUser.uid,
                     alertEmail: auth.currentUser.email, 
+                    editCount: 0, 
                     createdAt: serverTimestamp()
                 });
                 await loadUserVehicle(auth.currentUser.uid);
             } catch (error) { 
                 console.error(error); alert("Error saving."); 
                 document.getElementById('generate-btn').textContent = "Create Tag";
+            }
+        });
+
+        function updateEditUI() {
+            const editBtn = document.getElementById('show-edit-btn');
+            const limitText = document.getElementById('edit-limit-text');
+            
+            if (currentEditCount >= 2) {
+                editBtn.classList.add('hidden'); 
+            } else {
+                editBtn.classList.remove('hidden');
+                limitText.textContent = `Edits remaining: ${2 - currentEditCount}`;
+            }
+        }
+
+        document.getElementById('show-edit-btn').addEventListener('click', () => {
+            document.getElementById('display-veh-num').classList.add('hidden');
+            document.getElementById('show-edit-btn').classList.add('hidden');
+            document.getElementById('edit-veh-container').classList.remove('hidden');
+            document.getElementById('edit-veh-container').classList.add('flex');
+            document.getElementById('edit-veh-input').value = document.getElementById('display-veh-num').textContent;
+        });
+
+        document.getElementById('cancel-veh-btn').addEventListener('click', () => {
+            document.getElementById('display-veh-num').classList.remove('hidden');
+            document.getElementById('edit-veh-container').classList.add('hidden');
+            document.getElementById('edit-veh-container').classList.remove('flex');
+            updateEditUI();
+        });
+
+        document.getElementById('save-veh-btn').addEventListener('click', async () => {
+            const newNum = document.getElementById('edit-veh-input').value.trim().toUpperCase();
+            if (!newNum) return alert("Enter a valid vehicle number.");
+            if (currentEditCount >= 2) return alert("Maximum edit limit reached."); 
+
+            const btn = document.getElementById('save-veh-btn');
+            btn.textContent = "...";
+
+            try {
+                const newCount = currentEditCount + 1; 
+                
+                await setDoc(doc(db, "vehicles", activeVehicleId), {
+                    vehicleNumber: newNum,
+                    editCount: newCount,
+                    updatedAt: serverTimestamp()
+                }, { merge: true });
+                
+                document.getElementById('display-veh-num').textContent = newNum;
+                document.getElementById('print-vehicle-num').textContent = newNum;
+                currentEditCount = newCount;
+                
+                document.getElementById('display-veh-num').classList.remove('hidden');
+                document.getElementById('edit-veh-container').classList.add('hidden');
+                document.getElementById('edit-veh-container').classList.remove('flex');
+                updateEditUI();
+                
+                btn.textContent = "Save";
+            } catch (e) {
+                alert("Failed to update vehicle number.");
+                btn.textContent = "Save";
             }
         });
 
@@ -352,9 +435,6 @@
             } catch (e) { alert("Error saving SOS."); btn.textContent = "Save SOS Contacts"; }
         });
 
-        // -----------------------------------------------------
-        // BUG FIX #1: THE QR CODE PRINT RENDERER
-        // -----------------------------------------------------
         function renderQRCode(id) {
             const qrcodeDiv = document.getElementById('qrcode');
             qrcodeDiv.innerHTML = "";
@@ -369,36 +449,20 @@
             });
         }
 
-        // The exact fix for the missing print QR code
         document.getElementById('print-btn').addEventListener('click', () => {
             const qrcodeDiv = document.getElementById('qrcode');
             const canvas = qrcodeDiv.querySelector('canvas');
-            
-            if (canvas) {
-                // Instantly inject the generated canvas as a PNG image
-                document.getElementById('print-qr-img').src = canvas.toDataURL("image/png");
-            }
-
-            // Wait exactly 300ms to guarantee the image is injected before printing
-            setTimeout(() => {
-                window.print();
-            }, 300);
+            if (canvas) document.getElementById('print-qr-img').src = canvas.toDataURL("image/png");
+            setTimeout(() => { window.print(); }, 300);
         });
 
-        // -----------------------------------------------------
-        // BUG FIX #2: NATIVE HTML5 BROWSER PUSH NOTIFICATIONS
-        // -----------------------------------------------------
         document.getElementById('enable-push-btn').addEventListener('click', async () => {
             try {
                 const permission = await Notification.requestPermission();
                 if (permission === 'granted') {
                     document.getElementById('enable-push-btn').classList.add('hidden');
                     document.getElementById('push-status').classList.remove('hidden');
-                    
-                    // Send a test notification immediately!
-                    new Notification("VahanSetu Alerts Active", {
-                        body: "You will now receive desktop alerts when this dashboard is open."
-                    });
+                    new Notification("VahanSetu Alerts Active", { body: "You will now receive desktop alerts when this dashboard is open." });
                 } else {
                     alert("Please allow notifications in your browser settings to use this feature.");
                 }
@@ -413,22 +477,18 @@
                 snapshot.forEach((doc) => { alerts.push({ id: doc.id, ...doc.data() }); });
                 alerts.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
 
-                // Trigger a real desktop push notification for NEW alerts only
                 snapshot.docChanges().forEach((change) => {
                     if (change.type === "added" && !isInitialLoad) {
                         const newAlert = change.doc.data();
-                        
-                        // Check if user allowed HTML5 notifications
                         if (Notification.permission === "granted") {
                             new Notification(`VahanSetu: ${newAlert.vehicleNumber}`, {
                                 body: newAlert.issue,
-                                requireInteraction: true // Keeps the notification on screen until clicked
+                                requireInteraction: true 
                             });
                         }
                     }
                 });
 
-                // Set initial load to false so it doesn't spam old notifications
                 isInitialLoad = false;
 
                 if (alerts.length === 0) return;
