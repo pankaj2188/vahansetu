@@ -137,11 +137,11 @@
                     <div class="bg-yellow-50 p-5 rounded-2xl border border-yellow-200">
                         <h3 class="font-bold text-yellow-800 mb-1 flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                            Browser Push Alerts
+                            Browser Alerts
                         </h3>
-                        <p class="text-xs text-yellow-700 mb-3">Get lock-screen notifications on this device.</p>
-                        <button id="enable-push-btn" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-xl shadow-sm text-sm">Enable on this Device</button>
-                        <p id="push-status" class="text-xs text-green-600 font-bold hidden text-center">✅ Active here</p>
+                        <p class="text-xs text-yellow-700 mb-3">Get pop-up alerts on your desktop when dashboard is open.</p>
+                        <button id="enable-push-btn" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-xl shadow-sm text-sm transition">Allow Desktop Alerts</button>
+                        <p id="push-status" class="text-xs text-green-600 font-bold hidden text-center">✅ Alerts Active</p>
                     </div>
                 </div>
 
@@ -171,7 +171,7 @@
                                         <li>Tap <strong>Start</strong> at the bottom of the chat.</li>
                                         <li>The bot will reply with your code. Paste it below!</li>
                                     </ol>
-                                    <input type="text" id="route-telegram" placeholder="Paste your numeric code here (e.g. 5741094554)" class="w-full border border-blue-300 p-3 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 bg-white shadow-sm text-center tracking-widest text-blue-900 font-bold">
+                                    <input type="text" id="route-telegram" placeholder="Paste numeric code here (e.g. 5741094554)" class="w-full border border-blue-300 p-3 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 bg-white shadow-sm text-center tracking-widest text-blue-900 font-bold">
                                 </div>
                             </div>
                             
@@ -228,7 +228,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-        import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBxxam2BQmpD3yQ79sI0-WS0dEuPXhldOo",
@@ -242,7 +241,6 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const messaging = getMessaging(app);
         const provider = new GoogleAuthProvider();
 
         const loginSection = document.getElementById('login-section');
@@ -252,6 +250,7 @@
         
         let activeVehicleId = null; 
         let unsubscribeAlerts = null;
+        let isInitialLoad = true; // Tracks the first load of messages
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -353,7 +352,9 @@
             } catch (e) { alert("Error saving SOS."); btn.textContent = "Save SOS Contacts"; }
         });
 
-        // HELPER: RENDER PREMIUM COLOR QR CODE
+        // -----------------------------------------------------
+        // BUG FIX #1: THE QR CODE PRINT RENDERER
+        // -----------------------------------------------------
         function renderQRCode(id) {
             const qrcodeDiv = document.getElementById('qrcode');
             qrcodeDiv.innerHTML = "";
@@ -362,35 +363,73 @@
                 text: scanUrl, 
                 width: 170, 
                 height: 170, 
-                colorDark : "#3730a3", // Deep premium indigo
+                colorDark : "#3730a3", 
                 colorLight : "#ffffff", 
                 correctLevel : QRCode.CorrectLevel.H 
             });
-            setTimeout(() => { document.getElementById('print-qr-img').src = qrcodeDiv.querySelector('img').src; }, 500);
         }
 
-        document.getElementById('print-btn').addEventListener('click', () => window.print());
+        // The exact fix for the missing print QR code
+        document.getElementById('print-btn').addEventListener('click', () => {
+            const qrcodeDiv = document.getElementById('qrcode');
+            const canvas = qrcodeDiv.querySelector('canvas');
+            
+            if (canvas) {
+                // Instantly inject the generated canvas as a PNG image
+                document.getElementById('print-qr-img').src = canvas.toDataURL("image/png");
+            }
 
+            // Wait exactly 300ms to guarantee the image is injected before printing
+            setTimeout(() => {
+                window.print();
+            }, 300);
+        });
+
+        // -----------------------------------------------------
+        // BUG FIX #2: NATIVE HTML5 BROWSER PUSH NOTIFICATIONS
+        // -----------------------------------------------------
         document.getElementById('enable-push-btn').addEventListener('click', async () => {
             try {
                 const permission = await Notification.requestPermission();
                 if (permission === 'granted') {
-                    const token = await getToken(messaging, { vapidKey: "BNSiw6x3JhA5KAYvjZRxEVtpYXPsrnnnmBRndMqrw3aoI-Uw8UtPNF14QPJMNCv-_YNU_MDhQRumBBlvkXRDU6w" });
-                    if (token) {
-                        await setDoc(doc(db, "vehicles", activeVehicleId), { fcmToken: token }, { merge: true });
-                        document.getElementById('enable-push-btn').classList.add('hidden');
-                        document.getElementById('push-status').classList.remove('hidden');
-                    }
+                    document.getElementById('enable-push-btn').classList.add('hidden');
+                    document.getElementById('push-status').classList.remove('hidden');
+                    
+                    // Send a test notification immediately!
+                    new Notification("VahanSetu Alerts Active", {
+                        body: "You will now receive desktop alerts when this dashboard is open."
+                    });
+                } else {
+                    alert("Please allow notifications in your browser settings to use this feature.");
                 }
-            } catch (e) { console.error(e); alert("Failed to enable push."); }
+            } catch (e) { console.error(e); }
         });
 
         function startListeningForAlerts(vehicleId) {
             const q = query(collection(db, "alerts"), where("vehicleId", "==", vehicleId));
+            
             unsubscribeAlerts = onSnapshot(q, (snapshot) => {
                 const alerts = [];
                 snapshot.forEach((doc) => { alerts.push({ id: doc.id, ...doc.data() }); });
                 alerts.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
+
+                // Trigger a real desktop push notification for NEW alerts only
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added" && !isInitialLoad) {
+                        const newAlert = change.doc.data();
+                        
+                        // Check if user allowed HTML5 notifications
+                        if (Notification.permission === "granted") {
+                            new Notification(`VahanSetu: ${newAlert.vehicleNumber}`, {
+                                body: newAlert.issue,
+                                requireInteraction: true // Keeps the notification on screen until clicked
+                            });
+                        }
+                    }
+                });
+
+                // Set initial load to false so it doesn't spam old notifications
+                isInitialLoad = false;
 
                 if (alerts.length === 0) return;
 
