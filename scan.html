@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VahanSetu - Alert Vehicle Owner</title>
+    <title>VahanSetu - Scan Tag</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function() {
-            emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); // We'll set this up later
-        })();
-    </script>
+    <script type="text/javascript"> (function() { emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); })(); </script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans p-4">
 
@@ -18,7 +14,7 @@
         
         <div class="text-center mb-6">
             <h1 class="text-3xl font-extrabold text-indigo-600 tracking-tighter">VahanSetu</h1>
-            <p class="text-gray-500 text-sm font-bold text-emerald-600 mt-1">100% Anonymous Alert</p>
+            <p class="text-gray-500 text-sm font-bold mt-1">100% Anonymous Alert System</p>
         </div>
 
         <div id="loading-state" class="text-center py-10">
@@ -27,9 +23,7 @@
         </div>
 
         <div id="error-state" class="hidden text-center py-10">
-            <svg class="h-16 w-16 text-red-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <svg class="h-16 w-16 text-red-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             <h2 class="text-xl font-bold text-gray-800 mb-2">Invalid QR Code</h2>
             <p class="text-gray-500">This vehicle tag is not registered in our system.</p>
         </div>
@@ -37,37 +31,48 @@
         <div id="action-state" class="hidden">
             <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-center mb-6">
                 <p class="text-xs text-indigo-500 font-bold uppercase tracking-wider mb-1">Vehicle Found</p>
-                <h2 id="display-vehicle-num" class="text-3xl font-black text-gray-900 tracking-widest">BR-XX-XXXX</h2>
+                <h2 id="display-vehicle-num" class="text-3xl font-black text-gray-900 tracking-widest uppercase">BR-XX-XXXX</h2>
             </div>
 
-            <form id="alert-form" class="space-y-4">
+            <form id="alert-form" class="space-y-4 mb-8">
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">What is the issue?</label>
-                    <select id="issue-type" class="w-full border border-gray-300 p-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-gray-800 font-medium cursor-pointer shadow-sm">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">What is the parking issue?</label>
+                    <select id="issue-type" class="w-full border border-gray-300 p-4 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white font-medium cursor-pointer shadow-sm">
                         <option value="Blocking my vehicle">Blocking my vehicle (मेरा वाहन रोक दिया है)</option>
                         <option value="Parked in wrong spot">Parked in wrong spot (गलत जगह पार्क है)</option>
                         <option value="Headlights left on">Headlights left on (हेडलाइट चालू है)</option>
                         <option value="Window left open">Window left open (खिड़की खुली है)</option>
-                        <option value="Vehicle is damaged">Vehicle is damaged (वाहन क्षतिग्रस्त है)</option>
-                        <option value="Urgent: Please move">Urgent: Please move (कृपया तुरंत हटाएं)</option>
+                        <option value="Please move vehicle">Urgent: Please move (कृपया तुरंत हटाएं)</option>
                     </select>
                 </div>
 
-                <button type="submit" id="send-alert-btn" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-4 rounded-xl transition duration-200 shadow-lg shadow-red-500/30 flex justify-center items-center gap-2 mt-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                <p class="text-[11px] text-gray-500 text-center flex items-center justify-center gap-1 mt-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    Browser will ask for GPS location to verify alert authenticity
+                </p>
+
+                <button type="submit" id="send-alert-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-4 rounded-xl shadow-lg transition duration-200">
                     Send Anonymous Alert
                 </button>
             </form>
+
+            <hr class="border-gray-200 mb-6">
+
+            <div class="text-center">
+                <p class="text-xs font-bold text-red-500 uppercase tracking-wider mb-2">In case of accident only</p>
+                <button id="sos-btn" type="button" class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 px-4 rounded-xl shadow-lg shadow-red-500/30 flex justify-center items-center gap-2 transition duration-200 border-2 border-red-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    REPORT ACCIDENT (SOS)
+                </button>
+            </div>
         </div>
 
         <div id="success-state" class="hidden text-center py-8">
             <div class="bg-green-100 rounded-full p-3 inline-block mb-4">
-                <svg class="h-12 w-12 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
+                <svg class="h-12 w-12 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
             </div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">Alert Sent Securely!</h2>
-            <p class="text-gray-600">The owner has been notified. Thank you for your patience.</p>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Alert Sent!</h2>
+            <p class="text-gray-600">The owner/family has been securely notified of the location.</p>
             <p class="text-sm font-bold text-indigo-600 mt-8">Powered by VahanSetu</p>
         </div>
 
@@ -77,7 +82,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // Your specific Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBxxam2BQmpD3yQ79sI0-WS0dEuPXhldOo",
             authDomain: "vahansetu-d9ea9.firebaseapp.com",
@@ -90,113 +94,168 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const loadingState = document.getElementById('loading-state');
-        const errorState = document.getElementById('error-state');
-        const actionState = document.getElementById('action-state');
-        const successState = document.getElementById('success-state');
+        // UI Elements
         const displayVehicleNum = document.getElementById('display-vehicle-num');
         const alertForm = document.getElementById('alert-form');
         const sendAlertBtn = document.getElementById('send-alert-btn');
+        const sosBtn = document.getElementById('sos-btn');
+        const actionState = document.getElementById('action-state');
+        const successState = document.getElementById('success-state');
 
-        // Dynamic Owner Data
+        // Dynamic Owner Data routing variables
         let vehicleOwnerUid = "";
-        let vehicleOwnerEmail = "";
-        let vehicleOwnerTelegramId = "";
+        let activeDriverEmail = "";
+        let activeTelegramId = "";
+        let emergencyEmail = "";
 
+        // Get Tag ID from URL
         function getTagIdFromUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('id');
+            return new URLSearchParams(window.location.search).get('id');
         }
 
+        // Fetch GPS Location with a Promise
+        function getGPSLocation() {
+            return new Promise((resolve) => {
+                if (!navigator.geolocation) {
+                    resolve("GPS not supported by browser");
+                } else {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const lat = position.coords.latitude;
+                            const lon = position.coords.longitude;
+                            resolve(`https://www.google.com/maps?q=${lat},${lon}`);
+                        },
+                        (error) => {
+                            resolve("User denied GPS permission");
+                        },
+                        { timeout: 7000 } // Don't wait longer than 7 seconds
+                    );
+                }
+            });
+        }
+
+        // Load Vehicle Details
         async function loadVehicleData() {
             const tagId = getTagIdFromUrl();
-            if (!tagId) {
-                loadingState.classList.add('hidden');
-                errorState.classList.remove('hidden');
-                return;
-            }
+            if (!tagId) return document.getElementById('error-state').classList.remove('hidden');
 
             try {
-                const docRef = doc(db, "vehicles", tagId);
-                const docSnap = await getDoc(docRef);
-
+                const docSnap = await getDoc(doc(db, "vehicles", tagId));
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     displayVehicleNum.textContent = data.vehicleNumber;
                     
+                    // Route to dynamic driver OR fallback to creator
                     vehicleOwnerUid = data.ownerUid; 
-                    vehicleOwnerEmail = data.ownerEmail || ""; 
-                    // Fallback to your ID for testing if the user hasn't linked one yet
-                    vehicleOwnerTelegramId = data.telegramChatId || "5741094554"; 
+                    activeDriverEmail = data.alertEmail || ""; 
+                    activeTelegramId = data.telegramChatId || "5741094554"; // fallback to your ID
+                    emergencyEmail = data.emergencyEmail || activeDriverEmail; // SOS contact
                     
-                    loadingState.classList.add('hidden');
+                    document.getElementById('loading-state').classList.add('hidden');
                     actionState.classList.remove('hidden');
                 } else {
-                    loadingState.classList.add('hidden');
-                    errorState.classList.remove('hidden');
+                    document.getElementById('loading-state').classList.add('hidden');
+                    document.getElementById('error-state').classList.remove('hidden');
                 }
-            } catch (error) {
-                console.error("Error fetching document:", error);
-                alert("Network error. Please try again.");
-            }
+            } catch (e) { alert("Network error."); }
         }
 
+        // -----------------------------------------------------
+        // HANDLE NORMAL PARKING ALERT
+        // -----------------------------------------------------
         alertForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const issueType = document.getElementById('issue-type').value;
             const tagId = getTagIdFromUrl();
 
-            sendAlertBtn.innerHTML = "Sending Alerts...";
+            sendAlertBtn.innerHTML = "Locating GPS & Sending...";
             sendAlertBtn.disabled = true;
-            sendAlertBtn.classList.add('opacity-70');
+            sosBtn.disabled = true;
+
+            // 1. GET THE GOOGLE MAPS LINK!
+            const googleMapsLink = await getGPSLocation();
 
             try {
-                // --- TRIGGER 1: FIREBASE DASHBOARD ALERT ---
+                // Save to Dashboard Inbox (with location!)
                 await addDoc(collection(db, "alerts"), {
                     vehicleId: tagId,
                     vehicleNumber: displayVehicleNum.textContent,
-                    ownerUid: vehicleOwnerUid,
+                    ownerUid: vehicleOwnerUid, // Maps to the dashboard user
                     issue: issueType,
+                    locationUrl: googleMapsLink,
                     status: "unread",
                     createdAt: serverTimestamp()
                 });
 
-                // --- TRIGGER 2: SECURE TELEGRAM ALERT VIA CLOUDFLARE ---
-                if (vehicleOwnerTelegramId) {
+                // Send Secure Telegram via Cloudflare Worker
+                if (activeTelegramId) {
                     const cloudflareWorkerUrl = "https://vahansetu-alerts.princekumarsinha2188.workers.dev/";
-                    const alertMessage = `🚨 *VahanSetu Alert!*\n\n🚘 *Vehicle:* ${displayVehicleNum.textContent}\n⚠️ *Issue:* ${issueType}\n\n📍 Someone is waiting. Please check your vehicle immediately.`;
+                    const alertMessage = `🚨 *VahanSetu Alert!*\n\n🚘 *Vehicle:* ${displayVehicleNum.textContent}\n⚠️ *Issue:* ${issueType}\n📍 *Map Location:* [Click to view GPS](${googleMapsLink})\n\nPlease check your vehicle.`;
                     
-                    // We send the data to Cloudflare, Cloudflare safely uses the secret token
                     fetch(cloudflareWorkerUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            chatId: vehicleOwnerTelegramId,
-                            message: alertMessage
-                        })
-                    }).catch(err => console.error("Worker Error:", err));
+                        body: JSON.stringify({ chatId: activeTelegramId, message: alertMessage })
+                    }).catch(err => console.error(err));
                 }
 
-                // --- TRIGGER 3: EMAIL ALERT (EmailJS) ---
-                if (vehicleOwnerEmail && typeof emailjs !== 'undefined') {
-                    emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-                        to_email: vehicleOwnerEmail,
-                        vehicle_number: displayVehicleNum.textContent,
-                        issue: issueType,
-                        reply_to: "no-reply@vahansetu.com"
-                    }).catch(err => console.error("EmailJS Error:", err));
-                }
-
-                // Show Success Screen
                 actionState.classList.add('hidden');
                 successState.classList.remove('hidden');
 
             } catch (error) {
-                console.error("Error sending alert: ", error);
-                alert("Failed to send alert. Please try again.");
+                alert("Failed to send alert.");
                 sendAlertBtn.innerHTML = "Send Anonymous Alert";
                 sendAlertBtn.disabled = false;
-                sendAlertBtn.classList.remove('opacity-70');
+                sosBtn.disabled = false;
+            }
+        });
+
+        // -----------------------------------------------------
+        // HANDLE EMERGENCY SOS (Accident)
+        // -----------------------------------------------------
+        sosBtn.addEventListener('click', async () => {
+            if(!confirm("⚠️ WARNING: This is for actual accidents only. This will notify emergency family contacts. Proceed?")) return;
+
+            const tagId = getTagIdFromUrl();
+            sosBtn.innerHTML = "Sending SOS & GPS...";
+            sosBtn.disabled = true;
+            sendAlertBtn.disabled = true;
+
+            // GET THE GOOGLE MAPS LINK!
+            const googleMapsLink = await getGPSLocation();
+
+            try {
+                // Send massive dashboard alert
+                await addDoc(collection(db, "alerts"), {
+                    vehicleId: tagId,
+                    vehicleNumber: displayVehicleNum.textContent,
+                    ownerUid: vehicleOwnerUid,
+                    issue: "🚨 ACCIDENT REPORTED / URGENT SOS 🚨",
+                    locationUrl: googleMapsLink,
+                    status: "unread",
+                    createdAt: serverTimestamp()
+                });
+
+                // Send Telegram (We send this to the active driver so they know their car crashed)
+                if (activeTelegramId) {
+                    const cloudflareWorkerUrl = "https://vahansetu-alerts.princekumarsinha2188.workers.dev/";
+                    const sosMessage = `🚨 *EMERGENCY SOS!*\n\n🚘 *Vehicle:* ${displayVehicleNum.textContent}\n⚠️ *URGENT:* This vehicle has been reported in an accident.\n📍 *Map Location:* [Click to view GPS](${googleMapsLink})\n\nPlease contact authorities/family immediately.`;
+                    
+                    fetch(cloudflareWorkerUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ chatId: activeTelegramId, message: sosMessage })
+                    }).catch(err => console.error(err));
+                }
+
+                actionState.classList.add('hidden');
+                successState.classList.remove('hidden');
+
+            } catch (error) {
+                alert("Failed to send SOS.");
+                sosBtn.innerHTML = "REPORT ACCIDENT (SOS)";
+                sosBtn.disabled = false;
+                sendAlertBtn.disabled = false;
             }
         });
 
