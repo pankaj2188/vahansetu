@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VahanSetu - Scan Tag</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    </head>
+</head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans p-4">
 
     <div class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md border border-gray-100 relative overflow-hidden">
@@ -111,7 +111,7 @@
             return new URLSearchParams(window.location.search).get('id');
         }
 
-        // Fetch GPS Location with a Promise
+        // Fetch GPS Location with a Promise (FIXED GOOGLE MAPS LINK)
         function getGPSLocation() {
             return new Promise((resolve) => {
                 if (!navigator.geolocation) {
@@ -121,7 +121,8 @@
                         (position) => {
                             const lat = position.coords.latitude;
                             const lon = position.coords.longitude;
-                            resolve(`https://www.google.com/maps?q=$?q=${lat},${lon}`);
+                            // This creates a perfect Google Maps link and forces satellite view (&t=k)
+                            resolve(`https://www.google.com/maps?q=${lat},${lon}&t=k`);
                         },
                         (error) => {
                             resolve("User denied GPS permission");
