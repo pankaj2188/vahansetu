@@ -66,6 +66,15 @@
                 <button id="logout-btn" class="text-xs text-red-500 hover:text-red-700 font-bold bg-white px-3 py-1 rounded-lg border border-red-100 shadow-sm">Logout</button>
             </div>
 
+            <div class="bg-yellow-50 p-4 rounded-xl mb-6 border border-yellow-200 text-center">
+                <p class="text-sm text-yellow-800 font-bold mb-2">Want Lock-Screen Alerts?</p>
+                <button id="enable-push-btn" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-xl transition duration-200 shadow flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                    Enable Mobile Push Alerts
+                </button>
+                <p id="push-status" class="text-xs text-green-600 font-bold mt-2 hidden">✅ Push Alerts Active on this device!</p>
+            </div>
+
             <div class="text-left mb-8">
                 <label class="font-semibold text-gray-700 mb-1 block">Register Vehicle</label>
                 <div class="flex gap-2">
@@ -101,11 +110,13 @@
     </div>
 
     <script type="module">
+        // Import Auth, Firestore, AND Messaging (for Push Alerts)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        // IMPORTING NEW FIRESTORE FUNCTIONS FOR REAL-TIME LISTENING
         import { getFirestore, doc, setDoc, serverTimestamp, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging.js";
 
+        // Your exact Firebase keys
         const firebaseConfig = {
             apiKey: "AIzaSyBxxam2BQmpD3yQ79sI0-WS0dEuPXhldOo",
             authDomain: "vahansetu-d9ea9.firebaseapp.com",
@@ -119,11 +130,16 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
+        
+        // Initialize Messaging for Push Alerts
+        const messaging = getMessaging(app);
 
         const loginSection = document.getElementById('login-section');
         const dashboardSection = document.getElementById('dashboard-section');
         const alertsList = document.getElementById('alerts-list');
-        let unsubscribeAlerts = null; // To stop listening when logged out
+        const enablePushBtn = document.getElementById('enable-push-btn');
+        const pushStatus = document.getElementById('push-status');
+        let unsubscribeAlerts = null;
 
         // AUTHENTICATION STATE
         onAuthStateChanged(auth, (user) => {
@@ -131,11 +147,11 @@
                 loginSection.classList.add('hidden');
                 dashboardSection.classList.remove('hidden');
                 document.getElementById('user-name').textContent = user.displayName;
-                startListeningForAlerts(user.uid); // Start fetching alerts!
+                startListeningForAlerts(user.uid); 
             } else {
                 loginSection.classList.remove('hidden');
                 dashboardSection.classList.add('hidden');
-                if (unsubscribeAlerts) unsubscribeAlerts(); // Stop listening
+                if (unsubscribeAlerts) unsubscribeAlerts(); 
             }
         });
 
@@ -153,8 +169,12 @@
 
             try {
                 const uniqueId = crypto.randomUUID();
+                
+                // Save vehicle with owner UID
                 await setDoc(doc(db, "vehicles", uniqueId), {
-                    vehicleNumber: vehicleNum, ownerUid: auth.currentUser.uid, createdAt: serverTimestamp()
+                    vehicleNumber: vehicleNum, 
+                    ownerUid: auth.currentUser.uid, 
+                    createdAt: serverTimestamp()
                 });
 
                 const qrcodeDiv = document.getElementById('qrcode');
@@ -175,19 +195,47 @@
 
         document.getElementById('print-btn').addEventListener('click', () => window.print());
 
-        // --- NEW: REAL-TIME ALERTS LISTENER ---
+        // --- NEW: FCM PUSH NOTIFICATION SETUP ---
+        enablePushBtn.addEventListener('click', async () => {
+            try {
+                // Ask browser for permission
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    enablePushBtn.textContent = "Registering device...";
+                    
+                    // Generate unique device token using your VAPID key
+                    const currentToken = await getToken(messaging, { 
+                        vapidKey: "BNSiw6x3JhA5KAYvjZRxEVtpYXPsrnnnmBRndMqrw3aoI-Uw8UtPNF14QPJMNCv-_YNU_MDhQRumBBlvkXRDU6w" 
+                    });
+
+                    if (currentToken) {
+                        // Save this token to the user's master profile
+                        await setDoc(doc(db, "users", auth.currentUser.uid), {
+                            fcmToken: currentToken,
+                            email: auth.currentUser.email,
+                            updatedAt: serverTimestamp()
+                        }, { merge: true }); // merge: true prevents overwriting other data
+
+                        enablePushBtn.classList.add('hidden');
+                        pushStatus.classList.remove('hidden');
+                        alert("Success! You will now receive lock-screen alerts on this device.");
+                    }
+                } else {
+                    alert("Permission denied. You must allow notifications to receive alerts.");
+                }
+            } catch (error) {
+                console.error("Token error: ", error);
+                alert("Failed to enable push alerts. Please try again.");
+                enablePushBtn.textContent = "Enable Mobile Push Alerts";
+            }
+        });
+
+        // REAL-TIME ALERTS LISTENER (Dashboard Inbox)
         function startListeningForAlerts(uid) {
-            // Query alerts belonging to this specific user
             const q = query(collection(db, "alerts"), where("ownerUid", "==", uid));
-            
-            // onSnapshot listens for database changes in real-time
             unsubscribeAlerts = onSnapshot(q, (snapshot) => {
                 const alerts = [];
-                snapshot.forEach((doc) => {
-                    alerts.push({ id: doc.id, ...doc.data() });
-                });
-
-                // Sort newest first (using JS to avoid complex Firebase indexing setups)
+                snapshot.forEach((doc) => { alerts.push({ id: doc.id, ...doc.data() }); });
                 alerts.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
 
                 if (alerts.length === 0) {
@@ -195,27 +243,21 @@
                     return;
                 }
 
-                // Show the red badge if there are alerts
                 document.getElementById('alert-badge').classList.remove('hidden');
-
-                // Build the HTML for the alerts
                 let html = '';
                 alerts.forEach(alert => {
-                    // Format the date nicely
                     const dateObj = alert.createdAt ? alert.createdAt.toDate() : new Date();
                     const timeString = dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    const dateString = dateObj.toLocaleDateString();
-
+                    
                     html += `
                     <div class="bg-red-50 border-l-4 border-red-500 p-3 rounded shadow-sm">
                         <div class="flex justify-between items-start mb-1">
                             <span class="font-bold text-gray-900">${alert.vehicleNumber}</span>
-                            <span class="text-xs text-gray-500">${dateString} ${timeString}</span>
+                            <span class="text-xs text-gray-500">${timeString}</span>
                         </div>
                         <p class="text-sm text-red-700 font-semibold">${alert.issue}</p>
                     </div>`;
                 });
-                
                 alertsList.innerHTML = html;
             });
         }
