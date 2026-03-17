@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VahanSetu - Scan Tag</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript"> (function() { emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); })(); </script>
-</head>
+    </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans p-4">
 
     <div class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md border border-gray-100 relative overflow-hidden">
@@ -123,7 +121,7 @@
                         (position) => {
                             const lat = position.coords.latitude;
                             const lon = position.coords.longitude;
-                            resolve(`https://www.google.com/maps?q=${lat},${lon}`);
+                            resolve(`https://www.google.com/maps?q=$?q=${lat},${lon}`);
                         },
                         (error) => {
                             resolve("User denied GPS permission");
@@ -148,7 +146,7 @@
                     // Route to dynamic driver OR fallback to creator
                     vehicleOwnerUid = data.ownerUid; 
                     activeDriverEmail = data.alertEmail || ""; 
-                    activeTelegramId = data.telegramChatId || "5741094554"; // fallback to your ID
+                    activeTelegramId = data.telegramChatId || ""; 
                     emergencyEmail = data.emergencyEmail || activeDriverEmail; // SOS contact
                     
                     document.getElementById('loading-state').classList.add('hidden');
@@ -172,32 +170,37 @@
             sendAlertBtn.disabled = true;
             sosBtn.disabled = true;
 
-            // 1. GET THE GOOGLE MAPS LINK!
+            // 1. GET THE GOOGLE MAPS LINK
             const googleMapsLink = await getGPSLocation();
 
             try {
-                // Save to Dashboard Inbox (with location!)
+                // 2. Save to Dashboard Inbox (with location)
                 await addDoc(collection(db, "alerts"), {
                     vehicleId: tagId,
                     vehicleNumber: displayVehicleNum.textContent,
-                    ownerUid: vehicleOwnerUid, // Maps to the dashboard user
+                    ownerUid: vehicleOwnerUid, 
                     issue: issueType,
                     locationUrl: googleMapsLink,
                     status: "unread",
                     createdAt: serverTimestamp()
                 });
 
-                // Send Secure Telegram via Cloudflare Worker
-                if (activeTelegramId) {
-                    const cloudflareWorkerUrl = "https://vahansetu-alerts.princekumarsinha2188.workers.dev/";
-                    const alertMessage = `🚨 *VahanSetu Alert!*\n\n🚘 *Vehicle:* ${displayVehicleNum.textContent}\n⚠️ *Issue:* ${issueType}\n📍 *Map Location:* [Click to view GPS](${googleMapsLink})\n\nPlease check your vehicle.`;
-                    
-                    fetch(cloudflareWorkerUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ chatId: activeTelegramId, message: alertMessage })
-                    }).catch(err => console.error(err));
-                }
+                // 3. FIRE THE CLOUDFLARE BACKEND (Handles both Telegram & Email)
+                const cloudflareWorkerUrl = "https://vahansetu-alerts.princekumarsinha2188.workers.dev/";
+                const alertMessage = `🚨 *VahanSetu Alert!*\n\n🚘 *Vehicle:* ${displayVehicleNum.textContent}\n⚠️ *Issue:* ${issueType}\n📍 *Map Location:* [Click to view GPS](${googleMapsLink})\n\nPlease check your vehicle.`;
+                
+                fetch(cloudflareWorkerUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        chatId: activeTelegramId, 
+                        telegramMessage: alertMessage,
+                        toEmail: activeDriverEmail, // Goes to the active driver today
+                        vehicleNumber: displayVehicleNum.textContent,
+                        issue: issueType,
+                        mapLink: googleMapsLink
+                    })
+                }).catch(err => console.error(err));
 
                 actionState.classList.add('hidden');
                 successState.classList.remove('hidden');
@@ -221,11 +224,11 @@
             sosBtn.disabled = true;
             sendAlertBtn.disabled = true;
 
-            // GET THE GOOGLE MAPS LINK!
+            // 1. GET THE GOOGLE MAPS LINK
             const googleMapsLink = await getGPSLocation();
 
             try {
-                // Send massive dashboard alert
+                // 2. Send massive dashboard alert
                 await addDoc(collection(db, "alerts"), {
                     vehicleId: tagId,
                     vehicleNumber: displayVehicleNum.textContent,
@@ -236,17 +239,22 @@
                     createdAt: serverTimestamp()
                 });
 
-                // Send Telegram (We send this to the active driver so they know their car crashed)
-                if (activeTelegramId) {
-                    const cloudflareWorkerUrl = "https://vahansetu-alerts.princekumarsinha2188.workers.dev/";
-                    const sosMessage = `🚨 *EMERGENCY SOS!*\n\n🚘 *Vehicle:* ${displayVehicleNum.textContent}\n⚠️ *URGENT:* This vehicle has been reported in an accident.\n📍 *Map Location:* [Click to view GPS](${googleMapsLink})\n\nPlease contact authorities/family immediately.`;
-                    
-                    fetch(cloudflareWorkerUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ chatId: activeTelegramId, message: sosMessage })
-                    }).catch(err => console.error(err));
-                }
+                // 3. FIRE THE CLOUDFLARE BACKEND (Emergency routing)
+                const cloudflareWorkerUrl = "https://vahansetu-alerts.princekumarsinha2188.workers.dev/";
+                const sosMessage = `🚨 *EMERGENCY SOS!*\n\n🚘 *Vehicle:* ${displayVehicleNum.textContent}\n⚠️ *URGENT:* This vehicle has been reported in an accident.\n📍 *Map Location:* [Click to view GPS](${googleMapsLink})\n\nPlease contact authorities/family immediately.`;
+                
+                fetch(cloudflareWorkerUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        chatId: activeTelegramId, // Pings the driver's phone
+                        telegramMessage: sosMessage,
+                        toEmail: emergencyEmail, // Pings the permanent family contact!
+                        vehicleNumber: displayVehicleNum.textContent,
+                        issue: "🚨 ACCIDENT REPORTED / URGENT SOS 🚨",
+                        mapLink: googleMapsLink
+                    })
+                }).catch(err => console.error(err));
 
                 actionState.classList.add('hidden');
                 successState.classList.remove('hidden');
