@@ -8,22 +8,59 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
-        /* Print Styles for the Premium Sticker */
+        /* --- PREMIUM PRINT STYLES --- */
         #print-sticker-wrapper { display: none; }
+        
         @media print {
             body * { visibility: hidden; }
             @page { size: A4 portrait; margin: 0; }
+            
             #print-sticker-wrapper, #print-sticker-wrapper * { visibility: visible; }
             #print-sticker-wrapper {
                 display: flex !important; align-items: center; justify-content: center;
-                width: 100vw; height: 100vh; background-color: #f3f4f6;
+                width: 100vw; height: 100vh; background-color: #ffffff;
                 -webkit-print-color-adjust: exact; print-color-adjust: exact;
             }
+            
             #print-card {
-                width: 380px; background: linear-gradient(135deg, #ffffff 0%, #eef2ff 100%);
-                border: 1px solid #c7d2fe; border-radius: 20px; padding: 30px;
-                text-align: center; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.1); position: relative;
+                width: 420px; 
+                background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+                border: 3px solid #4f46e5; 
+                border-radius: 24px; 
+                padding: 40px;
+                text-align: center; 
+                box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.25); 
+                position: relative;
+                overflow: hidden;
             }
+            
+            /* Premium Accent Bar at the top */
+            #print-card::before {
+                content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px;
+                background: linear-gradient(90deg, #4f46e5, #ec4899);
+            }
+
+            .print-header { font-size: 34px; font-weight: 900; color: #3730a3; letter-spacing: -1px; margin-bottom: 4px; }
+            .print-sub { font-size: 13px; font-weight: 800; color: #6b7280; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 25px; }
+            
+            .qr-wrapper {
+                background: white; padding: 20px; border-radius: 20px;
+                box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2);
+                display: inline-block; margin-bottom: 25px;
+                border: 4px solid #e0e7ff;
+            }
+
+            .print-plate {
+                background: #111827; color: #fbbf24; padding: 12px 24px;
+                border-radius: 12px; font-size: 28px; font-weight: 900;
+                letter-spacing: 4px; display: inline-block; margin-bottom: 20px;
+                border: 3px solid #374151; text-transform: uppercase;
+                box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+            }
+
+            .print-text { font-size: 16px; font-weight: 700; color: #1f2937; margin-bottom: 5px; }
+            .print-hindi { font-size: 15px; color: #4b5563; margin-bottom: 15px; }
+            .print-footer { font-size: 14px; font-weight: 800; color: #10b981; background: #d1fae5; padding: 8px 16px; border-radius: 20px; display: inline-block;}
         }
     </style>
 </head>
@@ -31,16 +68,21 @@
 
     <div id="print-sticker-wrapper">
         <div id="print-card">
-            <h1 style="font-size: 28px; font-weight: 800; color: #4f46e5; margin-bottom: 5px;">VahanSetu</h1>
-            <p style="font-size: 13px; color: #4338ca; margin-bottom: 20px;">Connecting Vehicles, Protecting Privacy</p>
-            <div style="padding: 15px; background: white; display: inline-block; border-radius: 15px; border: 1px solid #e0e7ff; margin-bottom: 15px;">
-                <img id="print-qr-img" src="" alt="VahanSetu QR" style="width: 180px; height: 180px;">
+            <h1 class="print-header">VahanSetu</h1>
+            <p class="print-sub">Smart Vehicle Tag</p>
+            
+            <div class="qr-wrapper">
+                <img id="print-qr-img" src="" alt="VahanSetu QR" style="width: 200px; height: 200px;">
             </div>
-            <h2 id="print-vehicle-num" style="font-size: 24px; font-weight: 900; color: #111827; margin: 0; letter-spacing: 2px;"></h2>
-            <hr style="margin: 20px 0; border: 0; border-top: 1px dashed #c7d2fe;">
-            <p style="font-size: 14px; font-weight: bold; color: #1f2937;">Is this vehicle parked wrong?</p>
-            <p style="font-size: 14px; color: #1f2937; margin-bottom: 10px;">क्या यह वाहन गलत पार्क है?</p>
-            <p style="font-size: 14px; font-weight: bold; color: #10b981;">Scan to contact owner anonymously.</p>
+            
+            <div>
+                <div id="print-vehicle-num" class="print-plate">BR-01-AB-1234</div>
+            </div>
+            
+            <hr style="margin: 15px 0 20px; border: 0; border-top: 2px dashed #c7d2fe;">
+            <p class="print-text">Is this vehicle parked wrong?</p>
+            <p class="print-hindi">क्या यह वाहन गलत जगह पार्क है?</p>
+            <p class="print-footer">Scan to alert owner securely</p>
         </div>
     </div>
 
@@ -69,7 +111,7 @@
 
             <div id="setup-card" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hidden">
                 <h3 class="text-xl font-bold text-gray-800 mb-2">Setup Your Permanent Tag</h3>
-                <p class="text-sm text-gray-500 mb-4">Register your vehicle once to generate your permanent QR sticker.</p>
+                <p class="text-sm text-gray-500 mb-4">Register your vehicle once to generate your premium QR sticker.</p>
                 <div class="flex gap-2">
                     <input type="text" id="new-vehicle-number" placeholder="e.g., BR-01-AB-1234" class="w-full border border-gray-300 p-3 rounded-xl uppercase font-bold text-gray-800 focus:ring-2 focus:ring-indigo-500">
                     <button id="generate-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-md whitespace-nowrap transition">
@@ -81,13 +123,14 @@
             <div id="active-dashboard" class="grid grid-cols-1 md:grid-cols-3 gap-6 hidden">
                 
                 <div class="md:col-span-1 space-y-6">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 text-center flex flex-col items-center">
-                        <div class="bg-indigo-50 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wide">Permanent Tag</div>
-                        <h2 id="display-veh-num" class="text-2xl font-black text-gray-900 mb-4 tracking-widest uppercase"></h2>
-                        <div id="qrcode" class="p-3 bg-white border-2 border-dashed border-gray-200 rounded-xl mb-4"></div>
-                        <button id="print-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 px-4 rounded-xl shadow-sm transition flex justify-center items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                            Print Sticker
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 text-center flex flex-col items-center relative overflow-hidden">
+                        <div class="absolute top-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
+                        <div class="bg-indigo-50 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full mb-4 mt-2 uppercase tracking-wide">Permanent Tag</div>
+                        <h2 id="display-veh-num" class="text-2xl font-black text-gray-900 mb-4 tracking-widest uppercase bg-gray-100 px-4 py-2 rounded-lg border border-gray-200"></h2>
+                        <div id="qrcode" class="p-3 bg-white border border-indigo-100 rounded-xl mb-4 shadow-inner"></div>
+                        <button id="print-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-indigo-500/30 transition flex justify-center items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                            Print Premium Sticker
                         </button>
                     </div>
 
@@ -107,18 +150,32 @@
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider">Active Driver</div>
                         <h3 class="text-lg font-bold text-gray-800 mb-1">Dynamic Alert Routing</h3>
-                        <p class="text-xs text-gray-500 mb-4">Change this when someone else in the family takes the car.</p>
+                        <p class="text-xs text-gray-500 mb-4">Update this when someone else in the family takes the car.</p>
                         
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-xs font-semibold text-gray-700 mb-1">Current Driver's Email</label>
                                 <input type="email" id="route-email" placeholder="driver@gmail.com" class="w-full border border-gray-300 p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
                             </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-gray-700 mb-1">Current Driver's Telegram Chat ID <a href="https://t.me/BotFather" target="_blank" class="text-blue-500 hover:underline">(Find ID)</a></label>
-                                <input type="text" id="route-telegram" placeholder="e.g., 5741094554" class="w-full border border-gray-300 p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+                            
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <label class="block text-sm font-bold text-blue-900 mb-2">Connect Telegram Alerts</label>
+                                
+                                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 mb-3 shadow-inner">
+                                    <p class="text-sm font-bold text-blue-800 mb-3 flex items-center gap-2">
+                                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                                        How to get your Secure Code:
+                                    </p>
+                                    <ol class="text-xs text-blue-700 space-y-2 list-decimal list-inside font-medium mb-3">
+                                        <li>Click <a href="https://t.me/vahansetu_bot" target="_blank" class="bg-blue-600 text-white px-2 py-1 rounded inline-block shadow-sm hover:bg-blue-700 transition">Open VahanSetu Bot</a></li>
+                                        <li>Tap <strong>Start</strong> at the bottom of the chat.</li>
+                                        <li>The bot will reply with your code. Paste it below!</li>
+                                    </ol>
+                                    <input type="text" id="route-telegram" placeholder="Paste your numeric code here (e.g. 5741094554)" class="w-full border border-blue-300 p-3 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 bg-white shadow-sm text-center tracking-widest text-blue-900 font-bold">
+                                </div>
                             </div>
-                            <button id="save-routing-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-6 rounded-xl shadow-sm transition text-sm">
+                            
+                            <button id="save-routing-btn" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 px-6 rounded-xl shadow-md transition text-sm">
                                 Save Routing Updates
                             </button>
                         </div>
@@ -188,24 +245,21 @@
         const messaging = getMessaging(app);
         const provider = new GoogleAuthProvider();
 
-        // UI Elements
         const loginSection = document.getElementById('login-section');
         const dashboardSection = document.getElementById('dashboard-section');
         const setupCard = document.getElementById('setup-card');
         const activeDashboard = document.getElementById('active-dashboard');
         
-        let activeVehicleId = null; // Store the permanent ID globally
+        let activeVehicleId = null; 
         let unsubscribeAlerts = null;
 
-        // AUTHENTICATION STATE
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 loginSection.classList.add('hidden');
                 document.getElementById('user-profile-nav').classList.remove('hidden');
                 document.getElementById('nav-user-name').textContent = user.displayName;
                 dashboardSection.classList.remove('hidden');
-                
-                await loadUserVehicle(user.uid); // Check if they already have a permanent tag
+                await loadUserVehicle(user.uid); 
             } else {
                 loginSection.classList.remove('hidden');
                 dashboardSection.classList.add('hidden');
@@ -217,19 +271,15 @@
         document.getElementById('login-btn').addEventListener('click', async () => await signInWithPopup(auth, provider));
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
 
-        // LOAD VEHICLE DATA OR SHOW SETUP
         async function loadUserVehicle(uid) {
             try {
-                // Find if the user already generated a permanent tag
                 const q = query(collection(db, "vehicles"), where("ownerUid", "==", uid));
                 const querySnapshot = await getDocs(q);
 
                 if (querySnapshot.empty) {
-                    // No vehicle found. Show the Setup card.
                     setupCard.classList.remove('hidden');
                     activeDashboard.classList.add('hidden');
                 } else {
-                    // Vehicle found! Load the Permanent Dashboard.
                     setupCard.classList.add('hidden');
                     activeDashboard.classList.remove('hidden');
                     
@@ -237,28 +287,20 @@
                     activeVehicleId = vehicleDoc.id;
                     const data = vehicleDoc.data();
 
-                    // Render Permanent Info
                     document.getElementById('display-veh-num').textContent = data.vehicleNumber;
                     document.getElementById('print-vehicle-num').textContent = data.vehicleNumber;
                     renderQRCode(activeVehicleId);
 
-                    // Pre-fill Dynamic Routing Form
                     document.getElementById('route-email').value = data.alertEmail || auth.currentUser.email;
                     document.getElementById('route-telegram').value = data.telegramChatId || "";
-
-                    // Pre-fill SOS Form
                     document.getElementById('sos-email').value = data.emergencyEmail || "";
                     document.getElementById('sos-phone').value = data.emergencyPhone || "";
 
-                    // Start listening for alerts on this specific vehicle
                     startListeningForAlerts(activeVehicleId);
                 }
-            } catch (error) {
-                console.error("Error loading vehicle:", error);
-            }
+            } catch (error) { console.error("Error loading:", error); }
         }
 
-        // GENERATE PERMANENT TAG (First time only)
         document.getElementById('generate-btn').addEventListener('click', async () => {
             const vehicleNum = document.getElementById('new-vehicle-number').value.trim().toUpperCase();
             if (!vehicleNum) return alert("Enter vehicle number.");
@@ -269,11 +311,9 @@
                 await setDoc(doc(db, "vehicles", uniqueId), {
                     vehicleNumber: vehicleNum, 
                     ownerUid: auth.currentUser.uid,
-                    alertEmail: auth.currentUser.email, // Default to creator
+                    alertEmail: auth.currentUser.email, 
                     createdAt: serverTimestamp()
                 });
-                
-                // Reload the dashboard to show the new permanent tag
                 await loadUserVehicle(auth.currentUser.uid);
             } catch (error) { 
                 console.error(error); alert("Error saving."); 
@@ -281,7 +321,6 @@
             }
         });
 
-        // UPDATE DYNAMIC ROUTING (Active Driver)
         document.getElementById('save-routing-btn').addEventListener('click', async () => {
             const btn = document.getElementById('save-routing-btn');
             btn.textContent = "Saving...";
@@ -292,11 +331,14 @@
                     updatedAt: serverTimestamp()
                 }, { merge: true });
                 btn.textContent = "Saved Successfully!";
-                setTimeout(() => btn.textContent = "Save Routing Updates", 2000);
-            } catch (e) { alert("Error saving routing."); btn.textContent = "Save Routing Updates"; }
+                btn.classList.replace('bg-gray-900', 'bg-green-600');
+                setTimeout(() => {
+                    btn.textContent = "Save Routing Updates";
+                    btn.classList.replace('bg-green-600', 'bg-gray-900');
+                }, 2000);
+            } catch (e) { alert("Error saving."); btn.textContent = "Save Routing Updates"; }
         });
 
-        // UPDATE EMERGENCY SOS
         document.getElementById('save-sos-btn').addEventListener('click', async () => {
             const btn = document.getElementById('save-sos-btn');
             btn.textContent = "Saving...";
@@ -311,25 +353,30 @@
             } catch (e) { alert("Error saving SOS."); btn.textContent = "Save SOS Contacts"; }
         });
 
-        // HELPER: RENDER QR CODE
+        // HELPER: RENDER PREMIUM COLOR QR CODE
         function renderQRCode(id) {
             const qrcodeDiv = document.getElementById('qrcode');
             qrcodeDiv.innerHTML = "";
             const scanUrl = `https://pankaj2188.github.io/vahansetu/scan.html?id=${id}`;
-            new QRCode(qrcodeDiv, { text: scanUrl, width: 140, height: 140, colorDark : "#1f2937", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
+            new QRCode(qrcodeDiv, { 
+                text: scanUrl, 
+                width: 170, 
+                height: 170, 
+                colorDark : "#3730a3", // Deep premium indigo
+                colorLight : "#ffffff", 
+                correctLevel : QRCode.CorrectLevel.H 
+            });
             setTimeout(() => { document.getElementById('print-qr-img').src = qrcodeDiv.querySelector('img').src; }, 500);
         }
 
         document.getElementById('print-btn').addEventListener('click', () => window.print());
 
-        // PUSH NOTIFICATIONS
         document.getElementById('enable-push-btn').addEventListener('click', async () => {
             try {
                 const permission = await Notification.requestPermission();
                 if (permission === 'granted') {
                     const token = await getToken(messaging, { vapidKey: "BNSiw6x3JhA5KAYvjZRxEVtpYXPsrnnnmBRndMqrw3aoI-Uw8UtPNF14QPJMNCv-_YNU_MDhQRumBBlvkXRDU6w" });
                     if (token) {
-                        // Save token to the vehicle document so alerts route to this specific device
                         await setDoc(doc(db, "vehicles", activeVehicleId), { fcmToken: token }, { merge: true });
                         document.getElementById('enable-push-btn').classList.add('hidden');
                         document.getElementById('push-status').classList.remove('hidden');
@@ -338,7 +385,6 @@
             } catch (e) { console.error(e); alert("Failed to enable push."); }
         });
 
-        // LIVE INBOX
         function startListeningForAlerts(vehicleId) {
             const q = query(collection(db, "alerts"), where("vehicleId", "==", vehicleId));
             unsubscribeAlerts = onSnapshot(q, (snapshot) => {
@@ -353,7 +399,6 @@
                 alerts.forEach(alert => {
                     const dateObj = alert.createdAt ? alert.createdAt.toDate() : new Date();
                     const isAccident = alert.issue.includes("ACCIDENT");
-                    // Style differently if it's an SOS accident
                     const bgClass = isAccident ? "bg-red-600 text-white" : "bg-red-50 text-red-700";
                     const borderClass = isAccident ? "border-red-800" : "border-red-500";
                     
