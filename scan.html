@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VahanSetu - Scan Tag</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNGY0NmU1IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTkgMTJsMiAyIDQtNG01LjYxOC00LjAxNkExMS45NTUgMTEuOTU1IDAgMDExMiAyLjk0NGExMS45NTUgMTEuOTU1IDAgMDEtOC42MTggMy4wNEExMi4wMiAxMi4wMiAwIDAwMyA5YzAgNS41OTEgMy44MjQgMTAuMjkgOSAxMS42MjIgNS4xNzYtMS4zMzIgOS02LjAzIDktMTEuNjIyIDAtMS4wNDItLjEzMy0yLjA1Mi0uMzgyLTMuMDE2eiIvPjwvc3ZnPg=="/>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans p-4">
 
@@ -111,21 +112,23 @@
             return new URLSearchParams(window.location.search).get('id');
         }
 
-        // Fetch GPS Location with a Promise
+        // Fetch GPS Location with a Promise (FULLY FIXED GOOGLE MAPS LINK)
         function getGPSLocation() {
             return new Promise((resolve) => {
                 if (!navigator.geolocation) {
-                    resolve("GPS not supported by browser");
+                    // Safe fallback if the browser doesn't support GPS
+                    resolve("https://www.google.com/maps");
                 } else {
                     navigator.geolocation.getCurrentPosition(
                         (position) => {
                             const lat = position.coords.latitude;
                             const lon = position.coords.longitude;
-                            // Uses ?q= to drop a pin and &t=k for satellite view
-                            resolve(`http://googleusercontent.com/maps.google.com/?q=${lat},${lon}&t=k`);
+                            // The real, official Google Maps search parameter
+                            resolve(`https://www.google.com/maps?q=${lat},${lon}`);
                         },
                         (error) => {
-                            resolve("User denied GPS permission");
+                            // Safe fallback if the user hits "Deny" on the location popup
+                            resolve("https://www.google.com/maps");
                         },
                         { timeout: 7000 } // Don't wait longer than 7 seconds
                     );
