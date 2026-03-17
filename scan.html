@@ -36,11 +36,11 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">What is the parking issue?</label>
                     <select id="issue-type" class="w-full border border-gray-300 p-4 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white font-medium cursor-pointer shadow-sm">
-                        <option value="Blocking my vehicle">Blocking my vehicle (मेरा वाहन रोक दिया है)</option>
-                        <option value="Parked in wrong spot">Parked in wrong spot (गलत जगह पार्क है)</option>
-                        <option value="Headlights left on">Headlights left on (हेडलाइट चालू है)</option>
-                        <option value="Window left open">Window left open (खिड़की खुली है)</option>
-                        <option value="Please move vehicle">Urgent: Please move (कृपया तुरंत हटाएं)</option>
+                        <option value="Blocking my vehicle (मेरा वाहन रोक दिया है)">Blocking my vehicle (मेरा वाहन रोक दिया है)</option>
+                        <option value="Parked in wrong spot (गलत जगह पार्क है)">Parked in wrong spot (गलत जगह पार्क है)</option>
+                        <option value="Headlights left on (हेडलाइट चालू है)">Headlights left on (हेडलाइट चालू है)</option>
+                        <option value="Window left open (खिड़की खुली है)">Window left open (खिड़की खुली है)</option>
+                        <option value="Urgent: Please move (कृपया तुरंत हटाएं)">Urgent: Please move (कृपया तुरंत हटाएं)</option>
                     </select>
                 </div>
 
@@ -111,7 +111,7 @@
             return new URLSearchParams(window.location.search).get('id');
         }
 
-        // Fetch GPS Location with a Promise (ACTUALLY FIXED GOOGLE MAPS LINK)
+        // Fetch GPS Location with a Promise
         function getGPSLocation() {
             return new Promise((resolve) => {
                 if (!navigator.geolocation) {
@@ -121,10 +121,8 @@
                         (position) => {
                             const lat = position.coords.latitude;
                             const lon = position.coords.longitude;
-                            
-                            // 100% Correct Google Maps URL formatting:
                             // Uses ?q= to drop a pin and &t=k for satellite view
-                            resolve(`https://www.google.com/maps?q=${lat},${lon}&t=k`);
+                            resolve(`http://googleusercontent.com/maps.google.com/?q=${lat},${lon}&t=k`);
                         },
                         (error) => {
                             resolve("User denied GPS permission");
@@ -177,7 +175,7 @@
             const googleMapsLink = await getGPSLocation();
 
             try {
-                // 2. Save to Dashboard Inbox (with location)
+                // 2. Save to Dashboard Inbox
                 await addDoc(collection(db, "alerts"), {
                     vehicleId: tagId,
                     vehicleNumber: displayVehicleNum.textContent,
@@ -188,9 +186,9 @@
                     createdAt: serverTimestamp()
                 });
 
-                // 3. FIRE THE CLOUDFLARE BACKEND (Handles both Telegram & Email)
+                // 3. FIRE THE CLOUDFLARE BACKEND (Bilingual Telegram Payload)
                 const cloudflareWorkerUrl = "https://vahansetu-alerts.princekumarsinha2188.workers.dev/";
-                const alertMessage = `🚨 *VahanSetu Alert!*\n\n🚘 *Vehicle:* ${displayVehicleNum.textContent}\n⚠️ *Issue:* ${issueType}\n📍 *Map Location:* [Click to view GPS](${googleMapsLink})\n\nPlease check your vehicle.`;
+                const alertMessage = `🚨 *VahanSetu Alert / वाहनसेतु अलर्ट!*\n\n🚘 *Vehicle / वाहन:* ${displayVehicleNum.textContent}\n⚠️ *Issue / समस्या:* ${issueType}\n📍 *Location / स्थान:* [View GPS / जीपीएस देखें](${googleMapsLink})\n\nPlease check your vehicle immediately.\nकृपया तुरंत अपने वाहन की जाँच करें।`;
                 
                 fetch(cloudflareWorkerUrl, {
                     method: 'POST',
@@ -198,7 +196,7 @@
                     body: JSON.stringify({ 
                         chatId: activeTelegramId, 
                         telegramMessage: alertMessage,
-                        toEmail: activeDriverEmail, // Goes to the active driver today
+                        toEmail: activeDriverEmail,
                         vehicleNumber: displayVehicleNum.textContent,
                         issue: issueType,
                         mapLink: googleMapsLink
@@ -242,15 +240,15 @@
                     createdAt: serverTimestamp()
                 });
 
-                // 3. FIRE THE CLOUDFLARE BACKEND (Emergency routing)
+                // 3. FIRE THE CLOUDFLARE BACKEND (Bilingual Emergency Payload)
                 const cloudflareWorkerUrl = "https://vahansetu-alerts.princekumarsinha2188.workers.dev/";
-                const sosMessage = `🚨 *EMERGENCY SOS!*\n\n🚘 *Vehicle:* ${displayVehicleNum.textContent}\n⚠️ *URGENT:* This vehicle has been reported in an accident.\n📍 *Map Location:* [Click to view GPS](${googleMapsLink})\n\nPlease contact authorities/family immediately.`;
+                const sosMessage = `🚨 *EMERGENCY SOS / आपातकालीन अलर्ट!*\n\n🚘 *Vehicle / वाहन:* ${displayVehicleNum.textContent}\n⚠️ *URGENT / जरूरी:* This vehicle has been reported in an accident. / इस वाहन के दुर्घटनाग्रस्त होने की सूचना है।\n📍 *Location / स्थान:* [View GPS / जीपीएस देखें](${googleMapsLink})\n\nPlease contact family immediately.\nकृपया तुरंत परिवार से संपर्क करें।`;
                 
                 fetch(cloudflareWorkerUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
-                        chatId: activeTelegramId, // Pings the driver's phone
+                        chatId: activeTelegramId,
                         telegramMessage: sosMessage,
                         toEmail: emergencyEmail, // Pings the permanent family contact!
                         vehicleNumber: displayVehicleNum.textContent,
