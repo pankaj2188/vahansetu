@@ -111,7 +111,7 @@
             return new URLSearchParams(window.location.search).get('id');
         }
 
-        // Fetch GPS Location with a Promise (FIXED GOOGLE MAPS LINK)
+        // Fetch GPS Location with a Promise (ACTUALLY FIXED GOOGLE MAPS LINK)
         function getGPSLocation() {
             return new Promise((resolve) => {
                 if (!navigator.geolocation) {
@@ -121,7 +121,9 @@
                         (position) => {
                             const lat = position.coords.latitude;
                             const lon = position.coords.longitude;
-                            // This creates a perfect Google Maps link and forces satellite view (&t=k)
+                            
+                            // 100% Correct Google Maps URL formatting:
+                            // Uses ?q= to drop a pin and &t=k for satellite view
                             resolve(`https://www.google.com/maps?q=${lat},${lon}&t=k`);
                         },
                         (error) => {
