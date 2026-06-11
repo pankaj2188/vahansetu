@@ -252,7 +252,8 @@
                         telegramMessage: alertMessage,
                         toEmail: activeDriverEmail,
                         vehicleNumber: displayVehicleNum.textContent,
-                        issue: issueType,
+                        issue: alertMessage, // <-- FORCES FULL TEXT INTO EMAIL
+                        emailMessage: alertMessage, // <-- EXTRA FALLBACK
                         mapLink: googleMapsLink
                     })
                 }).catch(err => console.error(err));
@@ -329,7 +330,8 @@
                         telegramMessage: sosPayloadMessage,
                         toEmail: emergencyEmail, 
                         vehicleNumber: displayVehicleNum.textContent,
-                        issue: sosIssueString,
+                        issue: sosPayloadMessage, // <-- FORCES FULL TEXT INTO EMAIL
+                        emailMessage: sosPayloadMessage, // <-- EXTRA FALLBACK
                         mapLink: googleMapsLink
                     })
                 }).catch(err => console.error(err));
@@ -339,7 +341,7 @@
                 successState.classList.remove('hidden');
                 emergencyCallBox.classList.remove('hidden');
 
-                // State-Specific Ambulance Dial (Bihar/Delhi often use 102 primarily)
+                // State-Specific Ambulance Dial
                 if (stateInput === "Bihar" || stateInput === "Delhi") {
                     ambulanceCallBtn.href = "tel:102";
                     ambulanceCallBtn.innerHTML = "🚑 Dial 102 (Ambulance)";
