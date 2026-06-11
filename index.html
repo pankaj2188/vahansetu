@@ -11,16 +11,24 @@
     <style>
         /* --- PREMIUM PRINT STYLES --- */
         #print-sticker-wrapper { display: none; }
+        .print-only-container { display: none; }
         
         @media print {
             body * { visibility: hidden; }
             @page { size: A4 portrait; margin: 0; }
             
-            #print-sticker-wrapper, #print-sticker-wrapper * { visibility: visible; }
+            /* Make BOTH the sticker and the manual visible during printing */
+            #print-sticker-wrapper, #print-sticker-wrapper *,
+            .print-only-container, .print-only-container * { 
+                visibility: visible; 
+            }
+            
+            /* ================= PAGE 1: THE STICKER ================= */
             #print-sticker-wrapper {
                 display: flex !important; align-items: center; justify-content: center;
                 width: 100vw; height: 100vh; background-color: #ffffff;
                 -webkit-print-color-adjust: exact; print-color-adjust: exact;
+                position: absolute; top: 0; left: 0;
             }
             
             #print-card {
@@ -61,10 +69,68 @@
             .print-text { font-size: 16px; font-weight: 700; color: #1f2937; margin-bottom: 5px; }
             .print-hindi { font-size: 15px; color: #4b5563; margin-bottom: 15px; }
             
-            /* Updated Footer & Promo Styles */
             .print-footer { font-size: 14px; font-weight: 800; color: #10b981; background: #d1fae5; padding: 10px 16px; border-radius: 16px; display: inline-block; line-height: 1.4; margin-bottom: 20px; border: 1px solid #a7f3d0; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.1); }
             .print-promo { font-size: 12px; font-weight: 700; color: #6b7280; padding-top: 15px; border-top: 2px solid #e5e7eb; letter-spacing: 0.5px;}
             .print-promo strong { color: #4f46e5; }
+
+            /* ================= PAGES 2 & 3: THE MANUAL ================= */
+            .print-only-container {
+                display: block;
+                background-color: #ffffff;
+                position: absolute; top: 100vh; left: 0; width: 100%;
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+            }
+
+            .print-page {
+                position: relative;
+                width: 100%;
+                height: 100vh;
+                box-sizing: border-box;
+                padding: 60px 50px 80px 50px;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                color: #2d3748;
+                background: #ffffff;
+                page-break-before: always;
+                break-before: page;
+            }
+
+            .premium-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, #1a365d 0%, #2b6cb0 100%); }
+            .text-accent-bar { background: linear-gradient(90deg, #2c5282 0%, #4299e1 100%); }
+
+            .premium-header { margin-top: 20px; margin-bottom: 30px; }
+            .premium-header h1 { font-size: 38px; font-weight: 800; letter-spacing: -0.5px; color: #1a365d; margin: 0 0 5px 0; }
+            .premium-header h2 { font-size: 13px; font-weight: 600; letter-spacing: 1.5px; color: #718096; margin: 0; }
+            .premium-header .hindi-title { font-family: inherit; font-size: 14px; letter-spacing: 0; color: #4a5568; }
+            .premium-divider { margin-top: 15px; height: 2px; background: #e2e8f0; width: 100%; }
+
+            .premium-welcome { font-size: 15px; line-height: 1.6; color: #4a5568; margin-bottom: 35px; }
+            .premium-welcome .hindi-text { font-size: 14px; color: #718096; display: block; margin-top: 5px; font-style: italic; }
+
+            .premium-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 30px; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+            .mechanical-accent { border-left: 4px solid #2b6cb0; }
+            .alert-accent { border-left: 4px solid #319795; }
+            .setup-accent { border-left: 4px solid #dd6b20; }
+            .community-accent { border-left: 4px solid #4a5568; }
+
+            .card-badge { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: #4a5568; background: #f7fafc; padding: 8px 16px; border-bottom: 1px solid #e2e8f0; border-top-left-radius: 4px; border-top-right-radius: 4px; }
+            .card-body { padding: 20px; }
+            .eng-p { font-size: 14px; line-height: 1.5; margin: 0 0 12px 0; color: #2d3748; }
+            .hin-p { font-size: 13.5px; line-height: 1.6; margin: 0; color: #4a5568; }
+
+            .premium-grid { margin-top: 20px; border-top: 1px dashed #e2e8f0; padding-top: 15px; }
+            .grid-item { margin-bottom: 15px; }
+            .grid-item:last-child { margin-bottom: 0; }
+            .grid-item strong { font-size: 14px; color: #2d3748; }
+            .eng-sub { font-size: 13px; color: #4a5568; margin: 4px 0 2px 0; }
+            .hin-sub { font-size: 12.5px; color: #718096; margin: 0; }
+
+            .step-row { display: flex; align-items: flex-start; margin-bottom: 25px; }
+            .step-row:last-child { margin-bottom: 0; }
+            .step-number { font-size: 24px; font-weight: 800; color: #dd6b20; margin-right: 20px; background: #fffaf0; border: 1px solid #feebc8; padding: 4px 10px; border-radius: 6px; line-height: 1; }
+            .step-text { flex: 1; }
+            .step-text strong { font-size: 15px; color: #2d3748; }
+
+            .premium-footer { position: absolute; bottom: 40px; left: 50px; right: 50px; display: flex; justify-content: space-between; border-top: 1px solid #edf2f7; padding-top: 15px; font-size: 11px; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.5px; }
         }
     </style>
 </head>
@@ -90,6 +156,110 @@
         </div>
     </div>
 
+    <div class="print-only-container">
+        <div class="print-page page-two">
+            <div class="premium-top-bar"></div>
+            
+            <div class="premium-header">
+                <h1>VahanSetu</h1>
+                <h2>SMART PARKING ASSISTANT • <span class="hindi-title">स्मार्ट पार्किंग असिस्टेंट</span></h2>
+                <div class="premium-divider"></div>
+            </div>
+
+            <p class="premium-welcome">
+                Thank you for generating your VahanSetu QR Sticker! Below is the complete operational guide for your privacy-first alert system.<br>
+                <span class="hindi-text">अपना वाहनसेतु QR स्टिकर जनरेट करने के लिए धन्यवाद! आपके सुरक्षित प्राइवेसी-फर्स्ट अलर्ट सिस्टम की पूरी गाइड नीचे दी गई है।</span>
+            </p>
+
+            <div class="premium-card mechanical-accent">
+                <div class="card-badge">⚙️ SYSTEM LOGIC / कार्य प्रणाली</div>
+                <div class="card-body">
+                    <p class="eng-p"><strong>How Does It Work?</strong> VahanSetu is a privacy-first, anonymous alert system. When someone scans the QR code on your vehicle, they <strong>do not</strong> see your phone number or personal details. Instead, they see a clean digital menu to select the exact issue (e.g., "Wrong Parking," "Lights On," "Tow Warning").</p>
+                    <p class="hin-p"><strong>यह कैसे काम करता है?</strong> वाहनसेतु एक प्राइवेसी-फर्स्ट, सुरक्षित अलर्ट सिस्टम है। जब कोई आपके वाहन पर लगा QR कोड स्कैन करता है, तो उन्हें आपका फोन नंबर या कोई भी पर्सनल डिटेल्स <strong>नहीं</strong> दिखाई देती हैं। इसके बजाय, उन्हें समस्या चुनने के लिए एक साफ-सुथरा डिजिटल मेनू दिखता है (जैसे, "गलत पार्किंग," "लाइट्स ऑन," "गाड़ी टो होने की चेतावनी")।</p>
+                </div>
+            </div>
+
+            <div class="premium-card alert-accent">
+                <div class="card-badge">🔔 ALERT ROUTING / नोटिफिकेशन डिलीवरी</div>
+                <div class="card-body">
+                    <p class="eng-p">To keep your identity completely locked, all public alerts are instantly routed through automated cloud channels to your private devices:</p>
+                    <p class="hin-p">आपकी सुरक्षा को बनाए रखने के लिए, जनता द्वारा भेजे गए सभी अलर्ट तुरंत ऑटोमैटिक क्लाउड चैनल्स के ज़रिए सीधे आपके निजी डिवाइसेज तक पहुंचाए जाते हैं:</p>
+                    
+                    <div class="premium-grid">
+                        <div class="grid-item">
+                            <strong>📱 Telegram Bot (टेलीग्राम ऐप)</strong>
+                            <p class="eng-sub">Instant, lightning-fast secure push notifications directly on your phone.</p>
+                            <p class="hin-sub">आपके फोन पर तुरंत और बेहद तेज़ सुरक्षित पुश नोटिफिकेशन आता है।</p>
+                        </div>
+                        <div class="grid-item">
+                            <strong>📧 Email Alert (ईमेल बैकअप)</strong>
+                            <p class="eng-sub">A secondary real-time notification sent directly to your registered inbox.</p>
+                            <p class="hin-sub">एक बैकअप रियल-टाइम नोटिफिकेशन सीधे आपके रजिस्टर्ड ईमेल इनबॉक्स में भेजा जाता है।</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="premium-footer">
+                <span>VahanSetu Open-Source Utility</span>
+                <span>Page 2</span>
+            </div>
+        </div>
+
+        <div class="print-page page-three">
+            <div class="premium-top-bar text-accent-bar"></div>
+            
+            <div class="premium-header">
+                <h1>Deployment Guide</h1>
+                <h2>INSTALLATION & PLACEMENT • <span class="hindi-title">स्थापना और उपयोग की विधि</span></h2>
+                <div class="premium-divider"></div>
+            </div>
+
+            <div class="premium-card setup-accent">
+                <div class="card-badge">🛠️ STEP-BY-STEP SETUP / स्टेप-बाय-स्टेप प्रोसेस</div>
+                <div class="card-body">
+                    <div class="step-row">
+                        <div class="step-number">01</div>
+                        <div class="step-text">
+                            <strong>Cut Out the QR Code / क्यूआर कोड काटें</strong>
+                            <p class="eng-sub">Carefully cut along the outer boundary lines of the generated QR code sticker on Page 1.</p>
+                            <p class="hin-sub">पेज 1 पर जनरेट किए गए क्यूआर कोड स्टिकर की बाहरी बाउंड्री लाइनों के साथ इसे सावधानी से काट लें।</p>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-number">02</div>
+                        <div class="step-text">
+                            <strong>Weather Protection / मौसम से सुरक्षा</strong>
+                            <p class="eng-sub">For long-lasting use and water protection, laminate the paper lightly or seal it under clear packing tape.</p>
+                            <p class="hin-sub">लंबे समय तक चलने और बारिश/धूप से बचाव के लिए, स्टिकर को हल्का लेमिनेट करा लें या पारदर्शी टेप से कवर कर दें.</p>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-number">03</div>
+                        <div class="step-text">
+                            <strong>Strategic Placement / वाहन पर चिपकाएं</strong>
+                            <p class="eng-sub">Affix the sticker visibly on your vehicle's front dashboard, windshield, or bike visor where pedestrians can scan easily.</p>
+                            <p class="hin-sub">इसे अपने वाहन के फ्रंट डैशबोर्ड, विंडशील्ड या बाइक के वाइज़र पर साफ जगह पर चिपकाएं ताकि लोग आसानी से स्कैन कर सकें।</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="premium-card community-accent">
+                <div class="card-badge">📢 COMMUNITY IMPACT / जनहित संदेश</div>
+                <div class="card-body">
+                    <p class="eng-p"><strong>Spread the Word:</strong> VahanSetu was built to solve everyday parking disputes, towing damage, and road friction without corporate tracking or fees. If this tool helps you today, share it with your friends, family, and local driver communities.</p>
+                    <p class="hin-p"><strong>लोगों को जागरूक करें:</strong> वाहनसेतु का निर्माण बिना किसी कमर्शियल फीस या ट्रैकिंग के, रोज़मर्रा की पार्किंग समस्याओं, अनजाने में होने वाले टोइंग नुकसान और आपसी बहसों को सुलझाने के लिए किया गया है। अगर यह आपके काम आया, तो इसे अपने दोस्तों, परिवार और ड्राइवर भाइयों के साथ ज़रूर शेयर करें।</p>
+                </div>
+            </div>
+
+            <div class="premium-footer">
+                <span>Designed for Public Utility • Safe Roads India</span>
+                <span>Page 3</span>
+            </div>
+        </div>
+    </div>
+
     <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
         <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
             <h1 class="text-2xl font-black text-indigo-600 tracking-tighter">VahanSetu</h1>
@@ -101,7 +271,6 @@
     </nav>
 
     <div class="max-w-4xl mx-auto px-4 mt-8">
-
         <div id="login-section" class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-100 text-center mt-12">
             <h2 class="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h2>
             <p class="text-gray-500 text-sm mb-8">Login to manage your VahanSetu tags and routing.</p>
@@ -112,7 +281,6 @@
         </div>
 
         <div id="dashboard-section" class="hidden space-y-6">
-
             <div id="setup-card" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hidden">
                 <h3 class="text-xl font-bold text-gray-800 mb-2">Setup Your Permanent Tag</h3>
                 <p class="text-sm text-gray-500 mb-4">Register your vehicle once to generate your premium QR sticker.</p>
@@ -125,7 +293,6 @@
             </div>
 
             <div id="active-dashboard" class="grid grid-cols-1 md:grid-cols-3 gap-6 hidden">
-                
                 <div class="md:col-span-1 space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 text-center flex flex-col items-center relative overflow-hidden">
                         <div class="absolute top-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
@@ -167,7 +334,6 @@
                 </div>
 
                 <div class="md:col-span-2 space-y-6">
-                    
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider">Active Driver</div>
                         <h3 class="text-lg font-bold text-gray-800 mb-1">Dynamic Alert Routing</h3>
