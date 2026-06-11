@@ -33,6 +33,7 @@
                 <h2 id="display-vehicle-num" class="text-3xl font-black text-gray-900 tracking-widest uppercase">BR-XX-XXXX</h2>
             </div>
 
+            <!-- NORMAL ALERTS MENU -->
             <div id="normal-alerts-container">
                 <form id="alert-form" class="space-y-4 mb-8">
                     <div>
@@ -67,6 +68,7 @@
                 </div>
             </div>
 
+            <!-- SOS EXTENDED FORM (Hidden Initially) -->
             <div id="sos-extended-form" class="hidden mt-2">
                 <div class="bg-red-50 border border-red-200 p-5 rounded-2xl text-center">
                     <h3 class="text-red-800 font-black text-xl mb-1">EMERGENCY SOS</h3>
@@ -100,6 +102,7 @@
             <h2 class="text-2xl font-bold text-gray-800 mb-2">Alert Sent!</h2>
             <p class="text-gray-600 mb-2">The owner/family has been securely notified of the location.</p>
             
+            <!-- EMERGENCY CALL DASHBOARD -->
             <div id="emergency-call-box" class="hidden mt-6 bg-gray-900 p-5 rounded-2xl border-4 border-red-500 shadow-2xl text-center">
                 <h3 class="text-white font-black text-lg mb-1 uppercase tracking-widest">Govt. Emergency Lines</h3>
                 <p class="text-red-400 text-xs font-bold mb-4">Please call for help immediately:</p>
@@ -208,7 +211,7 @@
         }
 
         // -----------------------------------------------------
-        // HANDLE NORMAL PARKING ALERT (Anti-Prank Enabled)
+        // HANDLE NORMAL PARKING ALERT
         // -----------------------------------------------------
         alertForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -252,8 +255,8 @@
                         telegramMessage: alertMessage,
                         toEmail: activeDriverEmail,
                         vehicleNumber: displayVehicleNum.textContent,
-                        issue: alertMessage, // <-- FORCES FULL TEXT INTO EMAIL
-                        emailMessage: alertMessage, // <-- EXTRA FALLBACK
+                        issue: alertMessage, 
+                        emailMessage: alertMessage, 
                         mapLink: googleMapsLink
                     })
                 }).catch(err => console.error(err));
@@ -306,8 +309,10 @@
             }
 
             try {
-                // Generate Bilingual SOS Message
-                const sosIssueString = `🚨 *ACCIDENT ALERT / दुर्घटना / हादसा अलर्ट!*\n\n🚘 *Vehicle / वाहन:* ${displayVehicleNum.textContent}\n⚠️ *URGENT / जरूरी:* Your vehicle has met with an accident! / आपकी गाड़ी का एक्सीडेंट हो गया है!\n📍 *Location / स्थान:* [View GPS / जीपीएस देखें](${googleMapsLink})\n🏥 *State / राज्य:* ${stateInput}\n\n*Note:* The bystander has been given Govt. Emergency Numbers (Dial-112, Ambulance-108, Road Accident-1073). Please check on your vehicle immediately.\nकृपया तुरंत अपने वाहन की जाँच करें।`;
+                // Short Dashboard Tracker String
+                const sosIssueString = `🚨 ACCIDENT REPORTED / URGENT SOS (${stateInput}) 🚨`;
+                
+                // NEW: Highly Detailed User Message
                 const sosPayloadMessage = `🚨 *ACCIDENT ALERT / दुर्घटना / हादसा अलर्ट!*\n\n🚘 *Vehicle / वाहन:* ${displayVehicleNum.textContent}\n⚠️ *URGENT / जरूरी:* Your vehicle has met with an accident! / आपकी गाड़ी का एक्सीडेंट हो गया है!\n📍 *Location / स्थान:* [View GPS / जीपीएस देखें](${googleMapsLink})\n🏥 *State / राज्य:* ${stateInput}\n\n*Note:* The bystander has been given Govt. Emergency Numbers (Dial-112, Ambulance-108, Road Accident-1073). Please check on your vehicle immediately.\nकृपया तुरंत अपने वाहन की जाँच करें।`;
 
                 await addDoc(collection(db, "alerts"), {
@@ -322,6 +327,7 @@
 
                 const cloudflareWorkerUrl = "https://vahansetu-alerts.princekumarsinha2188.workers.dev/";
                 
+                // Send fully detailed message to both Telegram and Email
                 fetch(cloudflareWorkerUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -330,8 +336,8 @@
                         telegramMessage: sosPayloadMessage,
                         toEmail: emergencyEmail, 
                         vehicleNumber: displayVehicleNum.textContent,
-                        issue: sosPayloadMessage, // <-- FORCES FULL TEXT INTO EMAIL
-                        emailMessage: sosPayloadMessage, // <-- EXTRA FALLBACK
+                        issue: sosPayloadMessage, 
+                        emailMessage: sosPayloadMessage, 
                         mapLink: googleMapsLink
                     })
                 }).catch(err => console.error(err));
