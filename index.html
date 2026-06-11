@@ -9,15 +9,22 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNGY0NmU1IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTkgMTJsMiAyIDQtNG01LjYxOC00LjAxNkExMS45NTUgMTEuOTU1IDAgMDExMiAyLjk0NGExMS45NTUgMTEuOTU1IDAgMDEtOC42MTggMy4wNEExMi4wMiAxMi4wMiAwIDAwMyA5YzAgNS41OTEgMy44MjQgMTAuMjkgOSAxMS42MjIgNS4xNzYtMS4zMzIgOS02LjAzIDktMTEuNjIyIDAtMS4wNDItLjEzMy0yLjA1Mi0uMzgyLTMuMDE2eiIvPjwvc3ZnPg=="/>
 
     <style>
-        /* --- PREMIUM PRINT STYLES --- */
+        /* --- SCREENS: Hide print stuff --- */
         #print-sticker-wrapper { display: none; }
         .print-only-container { display: none; }
         
+        /* --- ULTRA-COLORFUL PRINT STYLES --- */
         @media print {
+            /* 1. THIS FORCES THE BROWSER TO PRINT EVERY SINGLE COLOR */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+
             body * { visibility: hidden; }
             @page { size: A4 portrait; margin: 0; }
             
-            /* Make BOTH the sticker and the manual visible during printing */
             #print-sticker-wrapper, #print-sticker-wrapper *,
             .print-only-container, .print-only-container * { 
                 visibility: visible; 
@@ -26,15 +33,15 @@
             /* ================= PAGE 1: THE STICKER ================= */
             #print-sticker-wrapper {
                 display: flex !important; align-items: center; justify-content: center;
-                width: 100vw; height: 100vh; background-color: #ffffff;
-                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+                width: 100vw; height: 100vh; 
+                background-color: #f8fafc !important; /* Premium Soft Slate Background */
                 position: absolute; top: 0; left: 0;
             }
             
             #print-card {
                 width: 420px; 
-                background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
-                border: 3px solid #4f46e5; 
+                background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%) !important;
+                border: 4px solid #4f46e5 !important; 
                 border-radius: 24px; 
                 padding: 40px;
                 text-align: center; 
@@ -44,98 +51,111 @@
             }
             
             #print-card::before {
-                content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px;
-                background: linear-gradient(90deg, #4f46e5, #ec4899);
+                content: ''; position: absolute; top: 0; left: 0; right: 0; height: 12px;
+                background: linear-gradient(90deg, #4f46e5, #ec4899, #f59e0b) !important;
             }
 
-            .print-header { font-size: 34px; font-weight: 900; color: #3730a3; letter-spacing: -1px; margin-bottom: 4px; }
+            .print-header { font-size: 34px; font-weight: 900; color: #3730a3 !important; letter-spacing: -1px; margin-bottom: 4px; }
             .print-sub { font-size: 13px; font-weight: 800; color: #6b7280; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 25px; }
             
             .qr-wrapper {
-                background: white; padding: 20px; border-radius: 20px;
-                box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2);
+                background: white !important; padding: 20px; border-radius: 20px;
                 display: inline-block; margin-bottom: 25px;
-                border: 4px solid #e0e7ff;
+                border: 4px solid #c7d2fe !important;
             }
 
             .print-plate {
-                background: #111827; color: #fbbf24; padding: 12px 24px;
+                background: #111827 !important; color: #fbbf24 !important; padding: 12px 24px;
                 border-radius: 12px; font-size: 28px; font-weight: 900;
                 letter-spacing: 4px; display: inline-block; margin-bottom: 20px;
-                border: 3px solid #374151; text-transform: uppercase;
-                box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+                border: 4px solid #374151 !important; text-transform: uppercase;
             }
 
             .print-text { font-size: 16px; font-weight: 700; color: #1f2937; margin-bottom: 5px; }
             .print-hindi { font-size: 15px; color: #4b5563; margin-bottom: 15px; }
             
-            .print-footer { font-size: 14px; font-weight: 800; color: #10b981; background: #d1fae5; padding: 10px 16px; border-radius: 16px; display: inline-block; line-height: 1.4; margin-bottom: 20px; border: 1px solid #a7f3d0; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.1); }
+            .print-footer { font-size: 14px; font-weight: 800; color: #047857 !important; background: #a7f3d0 !important; padding: 12px 16px; border-radius: 16px; display: inline-block; line-height: 1.4; margin-bottom: 20px; border: 2px solid #34d399 !important; }
             .print-promo { font-size: 12px; font-weight: 700; color: #6b7280; padding-top: 15px; border-top: 2px solid #e5e7eb; letter-spacing: 0.5px;}
-            .print-promo strong { color: #4f46e5; }
+            .print-promo strong { color: #4f46e5 !important; }
 
-            /* ================= PAGES 2 & 3: THE MANUAL ================= */
+            /* ================= PAGES 2 & 3: COLORFUL MANUAL ================= */
             .print-only-container {
                 display: block;
-                background-color: #ffffff;
+                background-color: #f8fafc !important; /* Premium Soft Slate Background */
                 position: absolute; top: 100vh; left: 0; width: 100%;
-                -webkit-print-color-adjust: exact; print-color-adjust: exact;
             }
 
             .print-page {
-                position: relative;
-                width: 100%;
-                height: 100vh;
-                box-sizing: border-box;
+                position: relative; width: 100%; height: 100vh; box-sizing: border-box;
                 padding: 60px 50px 80px 50px;
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-                color: #2d3748;
-                background: #ffffff;
-                page-break-before: always;
-                break-before: page;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                color: #2d3748; 
+                background: #f8fafc !important; /* Premium Soft Slate Background */
+                page-break-before: always; break-before: page;
             }
 
-            .premium-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, #1a365d 0%, #2b6cb0 100%); }
-            .text-accent-bar { background: linear-gradient(90deg, #2c5282 0%, #4299e1 100%); }
+            /* Big Colorful Top Bars */
+            .premium-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 12px; background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%) !important; }
+            .text-accent-bar { background: linear-gradient(90deg, #831843 0%, #f43f5e 100%) !important; }
 
-            .premium-header { margin-top: 20px; margin-bottom: 30px; }
-            .premium-header h1 { font-size: 38px; font-weight: 800; letter-spacing: -0.5px; color: #1a365d; margin: 0 0 5px 0; }
-            .premium-header h2 { font-size: 13px; font-weight: 600; letter-spacing: 1.5px; color: #718096; margin: 0; }
-            .premium-header .hindi-title { font-family: inherit; font-size: 14px; letter-spacing: 0; color: #4a5568; }
-            .premium-divider { margin-top: 15px; height: 2px; background: #e2e8f0; width: 100%; }
+            .premium-header { margin-top: 10px; margin-bottom: 30px; }
+            .premium-header h1 { font-size: 42px; font-weight: 900; letter-spacing: -1px; color: #1e3a8a !important; margin: 0 0 5px 0; }
+            .premium-header h2 { font-size: 14px; font-weight: 700; letter-spacing: 1.5px; color: #64748b; margin: 0; }
+            .premium-header .hindi-title { font-family: inherit; font-size: 15px; font-weight: 600; color: #475569; }
+            .premium-divider { margin-top: 15px; height: 3px; background: linear-gradient(90deg, #e2e8f0, transparent) !important; width: 100%; }
 
-            .premium-welcome { font-size: 15px; line-height: 1.6; color: #4a5568; margin-bottom: 35px; }
-            .premium-welcome .hindi-text { font-size: 14px; color: #718096; display: block; margin-top: 5px; font-style: italic; }
+            .premium-welcome { font-size: 16px; font-weight: 500; line-height: 1.6; color: #334155; margin-bottom: 35px; border-left: 4px solid #cbd5e1 !important; padding-left: 15px; }
+            .premium-welcome .hindi-text { font-size: 15px; color: #64748b; display: block; margin-top: 5px; font-style: italic; }
 
-            .premium-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 30px; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-            .mechanical-accent { border-left: 4px solid #2b6cb0; }
-            .alert-accent { border-left: 4px solid #319795; }
-            .setup-accent { border-left: 4px solid #dd6b20; }
-            .community-accent { border-left: 4px solid #4a5568; }
+            /* COLORFUL CARDS OVERHAUL */
+            .premium-card { 
+                border-radius: 12px; margin-bottom: 30px; position: relative; 
+                border: 2px solid transparent !important;
+                overflow: hidden;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important; /* Floating Cards */
+            }
+            
+            /* Card 1: Beautiful Blue logic card */
+            .mechanical-accent { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important; border-color: #bfdbfe !important; }
+            /* Card 2: Bright Teal alert card */
+            .alert-accent { background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%) !important; border-color: #99f6e4 !important; }
+            /* Card 3: Vibrant Orange setup card */
+            .setup-accent { background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%) !important; border-color: #fed7aa !important; }
+            /* Card 4: Soft Purple community card */
+            .community-accent { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%) !important; border-color: #e9d5ff !important; }
 
-            .card-badge { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: #4a5568; background: #f7fafc; padding: 8px 16px; border-bottom: 1px solid #e2e8f0; border-top-left-radius: 4px; border-top-right-radius: 4px; }
-            .card-body { padding: 20px; }
-            .eng-p { font-size: 14px; line-height: 1.5; margin: 0 0 12px 0; color: #2d3748; }
-            .hin-p { font-size: 13.5px; line-height: 1.6; margin: 0; color: #4a5568; }
+            /* Bright Colorful Badges */
+            .card-badge { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; padding: 10px 16px; border-bottom: 2px solid rgba(0,0,0,0.05) !important; }
+            .mechanical-accent .card-badge { background: #2563eb !important; color: white !important; }
+            .alert-accent .card-badge { background: #0d9488 !important; color: white !important; }
+            .setup-accent .card-badge { background: #ea580c !important; color: white !important; }
+            .community-accent .card-badge { background: #9333ea !important; color: white !important; }
 
-            .premium-grid { margin-top: 20px; border-top: 1px dashed #e2e8f0; padding-top: 15px; }
+            .card-body { padding: 25px; }
+            .eng-p { font-size: 14.5px; font-weight: 600; line-height: 1.5; margin: 0 0 12px 0; color: #1e293b !important; }
+            .hin-p { font-size: 14px; font-weight: 500; line-height: 1.6; margin: 0; color: #475569 !important; }
+
+            .premium-grid { margin-top: 20px; border-top: 2px dashed rgba(0,0,0,0.1) !important; padding-top: 20px; }
             .grid-item { margin-bottom: 15px; }
             .grid-item:last-child { margin-bottom: 0; }
-            .grid-item strong { font-size: 14px; color: #2d3748; }
-            .eng-sub { font-size: 13px; color: #4a5568; margin: 4px 0 2px 0; }
-            .hin-sub { font-size: 12.5px; color: #718096; margin: 0; }
+            .grid-item strong { font-size: 15px; font-weight: 800; color: #0f172a !important; }
+            .eng-sub { font-size: 13.5px; font-weight: 600; color: #334155 !important; margin: 4px 0 2px 0; }
+            .hin-sub { font-size: 13px; color: #64748b !important; margin: 0; }
 
+            /* Big Colorful Step Numbers */
             .step-row { display: flex; align-items: flex-start; margin-bottom: 25px; }
             .step-row:last-child { margin-bottom: 0; }
-            .step-number { font-size: 24px; font-weight: 800; color: #dd6b20; margin-right: 20px; background: #fffaf0; border: 1px solid #feebc8; padding: 4px 10px; border-radius: 6px; line-height: 1; }
+            .step-number { font-size: 26px; font-weight: 900; color: #ffffff !important; margin-right: 20px; background: #ea580c !important; padding: 8px 14px; border-radius: 8px; line-height: 1; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
             .step-text { flex: 1; }
-            .step-text strong { font-size: 15px; color: #2d3748; }
+            .step-text strong { font-size: 16px; font-weight: 800; color: #1e293b !important; }
 
-            .premium-footer { position: absolute; bottom: 40px; left: 50px; right: 50px; display: flex; justify-content: space-between; border-top: 1px solid #edf2f7; padding-top: 15px; font-size: 11px; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.5px; }
+            .premium-footer { position: absolute; bottom: 40px; left: 50px; right: 50px; display: flex; justify-content: space-between; border-top: 2px solid #e2e8f0 !important; padding-top: 15px; font-size: 12px; font-weight: 700; color: #94a3b8 !important; text-transform: uppercase; letter-spacing: 1px; }
         }
     </style>
 </head>
 <body class="bg-gray-50 font-sans pb-12">
 
+    <!-- PAGE 1: The Sticker -->
     <div id="print-sticker-wrapper">
         <div id="print-card">
             <h1 class="print-header">VahanSetu</h1>
@@ -156,7 +176,9 @@
         </div>
     </div>
 
+    <!-- PAGES 2 & 3: The Manual -->
     <div class="print-only-container">
+        <!-- PAGE 2: PREMIUM USER MANUAL -->
         <div class="print-page page-two">
             <div class="premium-top-bar"></div>
             
@@ -206,6 +228,7 @@
             </div>
         </div>
 
+        <!-- PAGE 3: PREMIUM INSTALLATION GUIDE -->
         <div class="print-page page-three">
             <div class="premium-top-bar text-accent-bar"></div>
             
@@ -260,6 +283,7 @@
         </div>
     </div>
 
+    <!-- MAIN WEB INTERFACE (Unchanged) -->
     <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
         <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
             <h1 class="text-2xl font-black text-indigo-600 tracking-tighter">VahanSetu</h1>
@@ -408,6 +432,7 @@
         </div>
     </div>
 
+    <!-- FIREBASE LOGIC (Unchanged) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
