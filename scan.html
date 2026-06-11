@@ -337,7 +337,7 @@
                         toEmail: emergencyEmail, 
                         vehicleNumber: displayVehicleNum.textContent,
                         issue: sosPayloadMessage, 
-                        emailMessage: sosPayloadMessage, 
+                        emailMessage:  `🚨 *ACCIDENT ALERT / दुर्घटना / हादसा अलर्ट!*\n\n🚘 *Vehicle / वाहन:* ${displayVehicleNum.textContent}\n⚠️ *URGENT / जरूरी:* Your vehicle has met with an accident! / आपकी गाड़ी का एक्सीडेंट हो गया है!\n🏥 *State / राज्य:* ${stateInput}\n\n*Note:* The bystander has been given Govt. Emergency Numbers (Dial-112, Ambulance-108, Road Accident-1073). Please check on your vehicle immediately.\nकृपया तुरंत अपने वाहन की जाँच करें।`; 
                         mapLink: googleMapsLink
                     })
                 }).catch(err => console.error(err));
