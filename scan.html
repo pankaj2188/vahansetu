@@ -307,8 +307,8 @@
 
             try {
                 // Generate Bilingual SOS Message
-                const sosIssueString = `🚨 ACCIDENT REPORTED / URGENT SOS (${stateInput}) 🚨`;
-                const sosPayloadMessage = `🚨 *EMERGENCY SOS / आपातकालीन अलर्ट!*\n\n🚘 *Vehicle / वाहन:* ${displayVehicleNum.textContent}\n⚠️ *URGENT / जरूरी:* Your vehicle has met with an accident! / आपकी गाड़ी का एक्सीडेंट हो गया है!\n📍 *Location / स्थान:* [View GPS / जीपीएस देखें](${googleMapsLink})\n🏥 *State / राज्य:* ${stateInput}\n\n*Note:* The bystander has been given Govt. Emergency Numbers (112, Ambulance, 1073). Please check on your vehicle immediately.\nकृपया तुरंत अपने वाहन की जाँच करें।`;
+                const sosIssueString = `🚨 *ACCIDENT ALERT / दुर्घटना / हादसा अलर्ट!*\n\n🚘 *Vehicle / वाहन:* ${displayVehicleNum.textContent}\n⚠️ *URGENT / जरूरी:* Your vehicle has met with an accident! / आपकी गाड़ी का एक्सीडेंट हो गया है!\n📍 *Location / स्थान:* [View GPS / जीपीएस देखें](${googleMapsLink})\n🏥 *State / राज्य:* ${stateInput}\n\n*Note:* The bystander has been given Govt. Emergency Numbers (112, Ambulance, 1073). Please check on your vehicle immediately.\nकृपया तुरंत अपने वाहन की जाँच करें।`;
+                const sosPayloadMessage = `🚨 *ACCIDENT ALERT / दुर्घटना / हादसा अलर्ट!*\n\n🚘 *Vehicle / वाहन:* ${displayVehicleNum.textContent}\n⚠️ *URGENT / जरूरी:* Your vehicle has met with an accident! / आपकी गाड़ी का एक्सीडेंट हो गया है!\n📍 *Location / स्थान:* [View GPS / जीपीएस देखें](${googleMapsLink})\n🏥 *State / राज्य:* ${stateInput}\n\n*Note:* The bystander has been given Govt. Emergency Numbers (112, Ambulance, 1073). Please check on your vehicle immediately.\nकृपया तुरंत अपने वाहन की जाँच करें।`;
 
                 await addDoc(collection(db, "alerts"), {
                     vehicleId: tagId,
