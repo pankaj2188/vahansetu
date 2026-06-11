@@ -33,36 +33,63 @@
                 <h2 id="display-vehicle-num" class="text-3xl font-black text-gray-900 tracking-widest uppercase">BR-XX-XXXX</h2>
             </div>
 
-            <form id="alert-form" class="space-y-4 mb-8">
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">What is the parking issue?</label>
-                    <select id="issue-type" class="w-full border border-gray-300 p-4 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white font-medium cursor-pointer shadow-sm">
-                        <option value="Blocking my vehicle (मेरा वाहन रोक दिया है)">Blocking my vehicle (मेरा वाहन रोक दिया है)</option>
-                        <option value="Parked in wrong spot (गलत जगह पार्क है)">Parked in wrong spot (गलत जगह पार्क है)</option>
-                        <option value="Headlights left on (हेडलाइट चालू है)">Headlights left on (हेडलाइट चालू है)</option>
-                        <option value="Window left open (खिड़की खुली है)">Window left open (खिड़की खुली है)</option>
-                        <option value="Urgent: Please move (कृपया तुरंत हटाएं)">Urgent: Please move (कृपया तुरंत हटाएं)</option>
-                    </select>
+            <div id="normal-alerts-container">
+                <form id="alert-form" class="space-y-4 mb-8">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">What is the parking issue?</label>
+                        <select id="issue-type" class="w-full border border-gray-300 p-4 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white font-medium cursor-pointer shadow-sm">
+                            <option value="Blocking my vehicle (मेरा वाहन रोक दिया है)">Blocking my vehicle (मेरा वाहन रोक दिया है)</option>
+                            <option value="Parked in wrong spot (गलत जगह पार्क है)">Parked in wrong spot (गलत जगह पार्क है)</option>
+                            <option value="Headlights left on (हेडलाइट चालू है)">Headlights left on (हेडलाइट चालू है)</option>
+                            <option value="Window left open (खिड़की खुली है)">Window left open (खिड़की खुली है)</option>
+                            <option value="Urgent: Please move (कृपया तुरंत हटाएं)">Urgent: Please move (कृपया तुरंत हटाएं)</option>
+                        </select>
+                    </div>
+
+                    <p class="text-[11px] text-gray-500 text-center flex items-center justify-center gap-1 mt-2">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Security: GPS location required to prevent spam
+                    </p>
+
+                    <button type="submit" id="send-alert-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-4 rounded-xl shadow-lg transition duration-200">
+                        Send Anonymous Alert
+                    </button>
+                </form>
+
+                <hr class="border-gray-200 mb-6">
+
+                <div class="text-center">
+                    <p class="text-xs font-bold text-red-500 uppercase tracking-wider mb-2">In case of accident only</p>
+                    <button id="sos-btn" type="button" class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 px-4 rounded-xl shadow-lg shadow-red-500/30 flex justify-center items-center gap-2 transition duration-200 border-2 border-red-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        REPORT ACCIDENT (SOS)
+                    </button>
                 </div>
+            </div>
 
-                <p class="text-[11px] text-gray-500 text-center flex items-center justify-center gap-1 mt-2">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    Security: GPS location required to prevent spam
-                </p>
+            <div id="sos-extended-form" class="hidden mt-2">
+                <div class="bg-red-50 border border-red-200 p-5 rounded-2xl text-center">
+                    <h3 class="text-red-800 font-black text-xl mb-1">EMERGENCY SOS</h3>
+                    <p class="text-xs text-red-600 font-semibold mb-4">You are reporting a severe accident. This will instantly alert the owner's emergency contacts.</p>
+                    
+                    <label class="block text-left text-xs font-bold text-red-900 mb-2">Select State for Local Ambulance (राज्य चुनें):</label>
+                    <select id="state-selector" class="w-full border-2 border-red-300 p-3 rounded-xl text-sm font-bold text-red-900 bg-white mb-4 focus:ring-4 focus:ring-red-200 outline-none">
+                        <option value="" disabled selected>-- Select Indian State --</option>
+                        <option value="Bihar">Bihar</option>
+                        <option value="Delhi">Delhi / NCR</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Other">Other / Not Sure</option>
+                    </select>
 
-                <button type="submit" id="send-alert-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-4 rounded-xl shadow-lg transition duration-200">
-                    Send Anonymous Alert
-                </button>
-            </form>
-
-            <hr class="border-gray-200 mb-6">
-
-            <div class="text-center">
-                <p class="text-xs font-bold text-red-500 uppercase tracking-wider mb-2">In case of accident only</p>
-                <button id="sos-btn" type="button" class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 px-4 rounded-xl shadow-lg shadow-red-500/30 flex justify-center items-center gap-2 transition duration-200 border-2 border-red-700">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                    REPORT ACCIDENT (SOS)
-                </button>
+                    <button id="confirm-sos-btn" type="button" class="w-full bg-red-600 hover:bg-red-800 text-white font-black py-4 px-4 rounded-xl shadow-md transition uppercase tracking-widest">
+                        Send Emergency Alert
+                    </button>
+                    <button id="cancel-sos-btn" type="button" class="mt-4 text-xs font-bold text-gray-500 hover:text-gray-800 transition">Cancel & Go Back</button>
+                </div>
             </div>
         </div>
 
@@ -71,7 +98,23 @@
                 <svg class="h-12 w-12 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
             </div>
             <h2 class="text-2xl font-bold text-gray-800 mb-2">Alert Sent!</h2>
-            <p class="text-gray-600">The owner/family has been securely notified of the location.</p>
+            <p class="text-gray-600 mb-2">The owner/family has been securely notified of the location.</p>
+            
+            <div id="emergency-call-box" class="hidden mt-6 bg-gray-900 p-5 rounded-2xl border-4 border-red-500 shadow-2xl text-center">
+                <h3 class="text-white font-black text-lg mb-1 uppercase tracking-widest">Govt. Emergency Lines</h3>
+                <p class="text-red-400 text-xs font-bold mb-4">Please call for help immediately:</p>
+                
+                <a href="tel:112" class="block w-full bg-red-600 hover:bg-red-700 text-white font-black py-3 px-4 rounded-xl mb-3 shadow-lg flex items-center justify-center gap-2 text-lg transition">
+                    📞 Dial 112 (All Emergencies)
+                </a>
+                <a id="ambulance-call-btn" href="tel:108" class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-3 px-4 rounded-xl mb-3 shadow-lg flex items-center justify-center gap-2 text-lg transition">
+                    🚑 Dial 108 (Ambulance)
+                </a>
+                <a href="tel:1073" class="block w-full bg-orange-500 hover:bg-orange-600 text-white font-black py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-lg transition">
+                    🛣️ Dial 1073 (Road Accident)
+                </a>
+            </div>
+
             <p class="text-sm font-bold text-indigo-600 mt-8">Powered by VahanSetu</p>
         </div>
 
@@ -95,11 +138,17 @@
 
         // UI Elements
         const displayVehicleNum = document.getElementById('display-vehicle-num');
+        const normalAlertsContainer = document.getElementById('normal-alerts-container');
+        const sosExtendedForm = document.getElementById('sos-extended-form');
         const alertForm = document.getElementById('alert-form');
         const sendAlertBtn = document.getElementById('send-alert-btn');
         const sosBtn = document.getElementById('sos-btn');
+        const confirmSosBtn = document.getElementById('confirm-sos-btn');
+        const cancelSosBtn = document.getElementById('cancel-sos-btn');
         const actionState = document.getElementById('action-state');
         const successState = document.getElementById('success-state');
+        const emergencyCallBox = document.getElementById('emergency-call-box');
+        const ambulanceCallBtn = document.getElementById('ambulance-call-btn');
 
         // Dynamic Owner Data routing variables
         let vehicleOwnerUid = "";
@@ -122,11 +171,9 @@
                         (position) => {
                             const lat = position.coords.latitude;
                             const lon = position.coords.longitude;
-                            // The TRUE, OFFICIAL Google Maps link that drops a pin
                             resolve(`https://www.google.com/maps?q=${lat},${lon}`);
                         },
                         (error) => {
-                            // If they hit "Deny", we REJECT the promise to block the alert
                             reject("Permission denied.");
                         },
                         { timeout: 7000 }
@@ -146,11 +193,10 @@
                     const data = docSnap.data();
                     displayVehicleNum.textContent = data.vehicleNumber;
                     
-                    // Route to dynamic driver OR fallback to creator
                     vehicleOwnerUid = data.ownerUid; 
                     activeDriverEmail = data.alertEmail || ""; 
                     activeTelegramId = data.telegramChatId || ""; 
-                    emergencyEmail = data.emergencyEmail || activeDriverEmail; // SOS contact
+                    emergencyEmail = data.emergencyEmail || activeDriverEmail; 
                     
                     document.getElementById('loading-state').classList.add('hidden');
                     actionState.classList.remove('hidden');
@@ -173,21 +219,18 @@
             sendAlertBtn.disabled = true;
             sosBtn.disabled = true;
 
-            // 1. GET THE GOOGLE MAPS LINK (STRICT MODE)
             let googleMapsLink = "";
             try {
                 googleMapsLink = await getGPSLocation();
             } catch (error) {
-                // ANTI-PRANK BLOCK: They denied GPS!
                 alert("🔒 Security Check Failed: You must ALLOW location access to prove you are near the vehicle. This prevents fake/prank alerts.");
                 sendAlertBtn.innerHTML = "Send Anonymous Alert";
                 sendAlertBtn.disabled = false;
                 sosBtn.disabled = false;
-                return; // THIS LINE STOPS THE ALERT FROM SENDING!
+                return; 
             }
 
             try {
-                // 2. Save to Dashboard Inbox
                 await addDoc(collection(db, "alerts"), {
                     vehicleId: tagId,
                     vehicleNumber: displayVehicleNum.textContent,
@@ -198,7 +241,6 @@
                     createdAt: serverTimestamp()
                 });
 
-                // 3. FIRE THE CLOUDFLARE BACKEND
                 const cloudflareWorkerUrl = "https://vahansetu-alerts.princekumarsinha2188.workers.dev/";
                 const alertMessage = `🚨 *VahanSetu Alert / वाहनसेतु अलर्ट!*\n\n🚘 *Vehicle / वाहन:* ${displayVehicleNum.textContent}\n⚠️ *Issue / समस्या:* ${issueType}\n📍 *Location / स्थान:* [View GPS / जीपीएस देखें](${googleMapsLink})\n\nPlease check your vehicle immediately.\nकृपया तुरंत अपने वाहन की जाँच करें।`;
                 
@@ -227,66 +269,87 @@
         });
 
         // -----------------------------------------------------
-        // HANDLE EMERGENCY SOS (Anti-Prank Enabled)
+        // TOGGLE SOS MENU
         // -----------------------------------------------------
-        sosBtn.addEventListener('click', async () => {
-            if(!confirm("⚠️ WARNING: This is for actual accidents only. This will notify emergency family contacts. Proceed?")) return;
+        sosBtn.addEventListener('click', () => {
+            normalAlertsContainer.classList.add('hidden');
+            sosExtendedForm.classList.remove('hidden');
+        });
+
+        cancelSosBtn.addEventListener('click', () => {
+            sosExtendedForm.classList.add('hidden');
+            normalAlertsContainer.classList.remove('hidden');
+        });
+
+        // -----------------------------------------------------
+        // HANDLE EMERGENCY SOS CONFIRMATION
+        // -----------------------------------------------------
+        confirmSosBtn.addEventListener('click', async () => {
+            const stateInput = document.getElementById('state-selector').value;
+            if (!stateInput) return alert("Please select a State so we can provide local emergency numbers.");
 
             const tagId = getTagIdFromUrl();
-            sosBtn.innerHTML = "Verifying Location & Sending SOS...";
-            sosBtn.disabled = true;
-            sendAlertBtn.disabled = true;
+            confirmSosBtn.innerHTML = "Verifying Location & Sending SOS...";
+            confirmSosBtn.disabled = true;
+            cancelSosBtn.disabled = true;
 
-            // 1. GET THE GOOGLE MAPS LINK (STRICT MODE)
             let googleMapsLink = "";
             try {
                 googleMapsLink = await getGPSLocation();
             } catch (error) {
-                // ANTI-PRANK BLOCK: They denied GPS!
                 alert("🔒 Security Check Failed: You must ALLOW location access to prove you are at the accident scene.");
-                sosBtn.innerHTML = "REPORT ACCIDENT (SOS)";
-                sosBtn.disabled = false;
-                sendAlertBtn.disabled = false;
-                return; // THIS LINE STOPS THE SOS FROM SENDING!
+                confirmSosBtn.innerHTML = "Send Emergency Alert";
+                confirmSosBtn.disabled = false;
+                cancelSosBtn.disabled = false;
+                return; 
             }
 
             try {
-                // 2. Send massive dashboard alert
+                // Generate Bilingual SOS Message
+                const sosIssueString = `🚨 ACCIDENT REPORTED / URGENT SOS (${stateInput}) 🚨`;
+                const sosPayloadMessage = `🚨 *EMERGENCY SOS / आपातकालीन अलर्ट!*\n\n🚘 *Vehicle / वाहन:* ${displayVehicleNum.textContent}\n⚠️ *URGENT / जरूरी:* Your vehicle has met with an accident! / आपकी गाड़ी का एक्सीडेंट हो गया है!\n📍 *Location / स्थान:* [View GPS / जीपीएस देखें](${googleMapsLink})\n🏥 *State / राज्य:* ${stateInput}\n\n*Note:* The bystander has been given Govt. Emergency Numbers (112, Ambulance, 1073). Please check on your vehicle immediately.\nकृपया तुरंत अपने वाहन की जाँच करें।`;
+
                 await addDoc(collection(db, "alerts"), {
                     vehicleId: tagId,
                     vehicleNumber: displayVehicleNum.textContent,
                     ownerUid: vehicleOwnerUid,
-                    issue: "🚨 ACCIDENT REPORTED / URGENT SOS 🚨",
+                    issue: sosIssueString,
                     locationUrl: googleMapsLink,
                     status: "unread",
                     createdAt: serverTimestamp()
                 });
 
-                // 3. FIRE THE CLOUDFLARE BACKEND (Bilingual Emergency Payload)
                 const cloudflareWorkerUrl = "https://vahansetu-alerts.princekumarsinha2188.workers.dev/";
-                const sosMessage = `🚨 *EMERGENCY SOS / आपातकालीन अलर्ट!*\n\n🚘 *Vehicle / वाहन:* ${displayVehicleNum.textContent}\n⚠️ *URGENT / जरूरी:* This vehicle has been reported in an accident. / इस वाहन के दुर्घटनाग्रस्त होने की सूचना है।\n📍 *Location / स्थान:* [View GPS / जीपीएस देखें](${googleMapsLink})\n\nPlease contact family immediately.\nकृपया तुरंत परिवार से संपर्क करें।`;
                 
                 fetch(cloudflareWorkerUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         chatId: activeTelegramId,
-                        telegramMessage: sosMessage,
-                        toEmail: emergencyEmail, // Pings the permanent family contact!
+                        telegramMessage: sosPayloadMessage,
+                        toEmail: emergencyEmail, 
                         vehicleNumber: displayVehicleNum.textContent,
-                        issue: "🚨 ACCIDENT REPORTED / URGENT SOS 🚨",
+                        issue: sosIssueString,
                         mapLink: googleMapsLink
                     })
                 }).catch(err => console.error(err));
 
+                // Switch UI to Success State & Show Emergency Box
                 actionState.classList.add('hidden');
                 successState.classList.remove('hidden');
+                emergencyCallBox.classList.remove('hidden');
+
+                // State-Specific Ambulance Dial (Bihar/Delhi often use 102 primarily)
+                if (stateInput === "Bihar" || stateInput === "Delhi") {
+                    ambulanceCallBtn.href = "tel:102";
+                    ambulanceCallBtn.innerHTML = "🚑 Dial 102 (Ambulance)";
+                }
 
             } catch (error) {
-                alert("Failed to send SOS.");
-                sosBtn.innerHTML = "REPORT ACCIDENT (SOS)";
-                sosBtn.disabled = false;
-                sendAlertBtn.disabled = false;
+                alert("Failed to send SOS. Please call 112 manually.");
+                confirmSosBtn.innerHTML = "Send Emergency Alert";
+                confirmSosBtn.disabled = false;
+                cancelSosBtn.disabled = false;
             }
         });
 
