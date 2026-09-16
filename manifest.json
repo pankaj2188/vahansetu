@@ -1,7 +1,8 @@
 {
   "name": "VahanSetu Workspace",
   "short_name": "VahanSetu",
-  "start_url": "/index.html",
+  "start_url": "/vahansetu/index.html",
+  "scope": "/vahansetu/",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#4f46e5",
