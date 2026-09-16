@@ -1,0 +1,15 @@
+{
+  "name": "VahanSetu Workspace",
+  "short_name": "VahanSetu",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Twitter_Verified_Badge.svg/512px-Twitter_Verified_Badge.svg.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
