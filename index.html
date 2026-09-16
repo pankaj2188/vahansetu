@@ -18,7 +18,7 @@
         .nav-item.active { background-color: #eff6ff; color: #4f46e5; border-right: 4px solid #4f46e5; }
         .mobile-nav-item.active { color: #4f46e5; }
 
-        /* --- PRINT STYLES (Kept completely preserved) --- */
+        /* --- PRINT STYLES --- */
         #print-sticker-wrapper { display: none; }
         .print-only-container { display: none; }
         
@@ -145,19 +145,19 @@
                 <h1 class="text-xl font-black text-gray-900 tracking-tighter">VahanSetu</h1>
             </div>
             <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-                <button onclick="switchTab('view-dashboard')" id="nav-dashboard" class="nav-item active w-full flex items-center gap-3 px-3 py-3 text-sm font-semibold text-gray-600 rounded-lg transition hover:bg-gray-50">
+                <button onclick="window.switchTab('view-dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3 py-3 text-sm font-semibold text-gray-600 rounded-lg transition hover:bg-gray-50">
                     <span class="text-lg">📊</span> Live Alerts
                 </button>
-                <button onclick="switchTab('view-vehicle')" id="nav-vehicle" class="nav-item w-full flex items-center gap-3 px-3 py-3 text-sm font-semibold text-gray-600 rounded-lg transition hover:bg-gray-50">
+                <button onclick="window.switchTab('view-vehicle')" id="nav-vehicle" class="nav-item w-full flex items-center gap-3 px-3 py-3 text-sm font-semibold text-gray-600 rounded-lg transition hover:bg-gray-50">
                     <span class="text-lg">🚘</span> Vehicle & QR
                 </button>
-                <button onclick="switchTab('view-routing')" id="nav-routing" class="nav-item w-full flex items-center gap-3 px-3 py-3 text-sm font-semibold text-gray-600 rounded-lg transition hover:bg-gray-50">
+                <button onclick="window.switchTab('view-routing')" id="nav-routing" class="nav-item w-full flex items-center gap-3 px-3 py-3 text-sm font-semibold text-gray-600 rounded-lg transition hover:bg-gray-50">
                     <span class="text-lg">🔀</span> Alert Routing
                 </button>
-                <button onclick="switchTab('view-sos')" id="nav-sos" class="nav-item w-full flex items-center gap-3 px-3 py-3 text-sm font-semibold text-gray-600 rounded-lg transition hover:bg-gray-50">
+                <button onclick="window.switchTab('view-sos')" id="nav-sos" class="nav-item w-full flex items-center gap-3 px-3 py-3 text-sm font-semibold text-gray-600 rounded-lg transition hover:bg-gray-50">
                     <span class="text-lg">🚨</span> SOS Setup
                 </button>
-                <button onclick="switchTab('view-profile')" id="nav-profile" class="nav-item w-full flex items-center gap-3 px-3 py-3 text-sm font-semibold text-gray-600 rounded-lg transition hover:bg-gray-50">
+                <button onclick="window.switchTab('view-profile')" id="nav-profile" class="nav-item w-full flex items-center gap-3 px-3 py-3 text-sm font-semibold text-gray-600 rounded-lg transition hover:bg-gray-50">
                     <span class="text-lg">👤</span> Profile
                 </button>
             </nav>
@@ -173,7 +173,7 @@
             </div>
 
             <!-- VIEW 1: DASHBOARD (Alerts) -->
-            <div id="view-dashboard" class="app-view active max-w-4xl mx-auto">
+            <div id="view-dashboard" class="app-view max-w-4xl mx-auto">
                 <h2 class="text-2xl font-bold text-gray-900 mb-6">Live Dashboard</h2>
                 
                 <div class="bg-yellow-50 p-5 rounded-2xl border border-yellow-200 mb-6 flex justify-between items-center">
@@ -281,16 +281,61 @@
                 </div>
             </div>
 
-            <!-- VIEW 5: PROFILE -->
+            <!-- VIEW 5: PROFILE SETTINGS WITH FULL DETAILS -->
             <div id="view-profile" class="app-view max-w-4xl mx-auto">
                 <h2 class="text-2xl font-bold text-gray-900 mb-6">Profile Settings</h2>
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-center">
-                    <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-700 text-3xl mx-auto mb-4 border-4 border-white shadow-sm">👤</div>
-                    <h3 id="profile-name" class="text-xl font-bold text-gray-900">Loading...</h3>
-                    <p id="profile-email" class="text-sm text-gray-500 mb-8">Loading...</p>
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                     
-                    <div class="border-t border-gray-100 pt-8 max-w-sm mx-auto">
-                        <button id="logout-btn" class="w-full bg-red-50 hover:bg-red-100 text-red-600 font-bold py-4 px-6 rounded-xl transition border border-red-100">Sign Out of VahanSetu</button>
+                    <!-- Profile Header -->
+                    <div class="flex items-center gap-4 mb-8 pb-6 border-b border-gray-100">
+                        <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-700 text-2xl font-bold border-2 border-indigo-200 shadow-sm">👤</div>
+                        <div>
+                            <h3 id="display-profile-name" class="text-xl font-bold text-gray-900">Loading...</h3>
+                            <p id="display-profile-email" class="text-sm text-gray-500">Loading...</p>
+                        </div>
+                    </div>
+
+                    <!-- Personal Details Form -->
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Full Name</label>
+                                <input type="text" id="profile-name" placeholder="John Doe" class="w-full border border-gray-200 p-3 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Phone Number</label>
+                                <input type="tel" id="profile-phone" placeholder="+91 XXXXXXXXXX" class="w-full border border-gray-200 p-3 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Blood Group</label>
+                                <select id="profile-blood" class="w-full border border-gray-200 p-3 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                                    <option value="" disabled selected>Select Blood Group</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">State / Location</label>
+                                <input type="text" id="profile-state" placeholder="e.g., Bihar, Delhi" class="w-full border border-gray-200 p-3 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+                        </div>
+
+                        <button id="save-profile-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-xl shadow-md transition mt-2">
+                            Save Profile Details
+                        </button>
+                    </div>
+                    
+                    <div class="border-t border-gray-100 pt-8 mt-8">
+                        <button id="logout-btn" class="w-full max-w-sm mx-auto block bg-red-50 hover:bg-red-100 text-red-600 font-bold py-4 px-6 rounded-xl transition border border-red-100">Sign Out of VahanSetu</button>
                     </div>
                 </div>
             </div>
@@ -299,19 +344,19 @@
         
         <!-- BOTTOM TAB BAR (Mobile) -->
         <nav class="md:hidden fixed bottom-0 w-full bg-white border-t border-gray-200 flex justify-around items-center pb-safe pt-2 px-2 z-50">
-            <button onclick="switchTab('view-dashboard')" id="mob-nav-dashboard" class="mobile-nav-item active flex flex-col items-center p-2 text-gray-400">
+            <button onclick="window.switchTab('view-dashboard')" id="mob-nav-dashboard" class="mobile-nav-item flex flex-col items-center p-2 text-gray-400">
                 <span class="text-xl mb-1">📊</span><span class="text-[10px] font-bold">Alerts</span>
             </button>
-            <button onclick="switchTab('view-vehicle')" id="mob-nav-vehicle" class="mobile-nav-item flex flex-col items-center p-2 text-gray-400">
+            <button onclick="window.switchTab('view-vehicle')" id="mob-nav-vehicle" class="mobile-nav-item flex flex-col items-center p-2 text-gray-400">
                 <span class="text-xl mb-1">🚘</span><span class="text-[10px] font-bold">Tag</span>
             </button>
-            <button onclick="switchTab('view-routing')" id="mob-nav-routing" class="mobile-nav-item flex flex-col items-center p-2 text-gray-400">
+            <button onclick="window.switchTab('view-routing')" id="mob-nav-routing" class="mobile-nav-item flex flex-col items-center p-2 text-gray-400">
                 <span class="text-xl mb-1">🔀</span><span class="text-[10px] font-bold">Route</span>
             </button>
-            <button onclick="switchTab('view-sos')" id="mob-nav-sos" class="mobile-nav-item flex flex-col items-center p-2 text-gray-400">
+            <button onclick="window.switchTab('view-sos')" id="mob-nav-sos" class="mobile-nav-item flex flex-col items-center p-2 text-gray-400">
                 <span class="text-xl mb-1">🚨</span><span class="text-[10px] font-bold">SOS</span>
             </button>
-            <button onclick="switchTab('view-profile')" id="mob-nav-profile" class="mobile-nav-item flex flex-col items-center p-2 text-gray-400">
+            <button onclick="window.switchTab('view-profile')" id="mob-nav-profile" class="mobile-nav-item flex flex-col items-center p-2 text-gray-400">
                 <span class="text-xl mb-1">👤</span><span class="text-[10px] font-bold">Profile</span>
             </button>
         </nav>
@@ -322,7 +367,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, collection, query, where, onSnapshot, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBxxam2BQmpD3yQ79sI0-WS0dEuPXhldOo",
@@ -342,8 +387,9 @@
         let currentEditCount = 0; 
         let unsubscribeAlerts = null;
         let isInitialLoad = true; 
+        let currentUserUid = null;
 
-        // SPA Navigation Logic
+        // SPA Navigation Logic (Global)
         window.switchTab = function(tabId) {
             document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
@@ -361,16 +407,20 @@
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                currentUserUid = user.uid;
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
                 
-                // Set Profile Data
-                document.getElementById('nav-user-name').textContent = user.displayName;
-                document.getElementById('profile-name').textContent = user.displayName;
-                document.getElementById('profile-email').textContent = user.email;
+                // Set Profile Defaults
+                document.getElementById('display-profile-name').textContent = user.displayName;
+                document.getElementById('display-profile-email').textContent = user.email;
+                document.getElementById('profile-name').value = user.displayName;
 
+                // Load databases
+                await loadUserProfile(user.uid);
                 await loadUserVehicle(user.uid); 
             } else {
+                currentUserUid = null;
                 document.getElementById('login-section').classList.remove('hidden');
                 document.getElementById('main-app').classList.add('hidden');
                 if (unsubscribeAlerts) unsubscribeAlerts();
@@ -378,8 +428,57 @@
         });
 
         document.getElementById('login-btn').addEventListener('click', async () => await signInWithPopup(auth, provider));
+        
+        // Fixed: Added sign out logic from inside the Profile tab
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
 
+        // Load the new Profile Database
+        async function loadUserProfile(uid) {
+            try {
+                const docSnap = await getDoc(doc(db, "users", uid));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if(data.name) {
+                        document.getElementById('profile-name').value = data.name;
+                        document.getElementById('display-profile-name').textContent = data.name;
+                    }
+                    if(data.phone) document.getElementById('profile-phone').value = data.phone;
+                    if(data.bloodGroup) document.getElementById('profile-blood').value = data.bloodGroup;
+                    if(data.state) document.getElementById('profile-state').value = data.state;
+                }
+            } catch(e) { console.error("Error loading profile", e); }
+        }
+
+        // Save the new Profile Database
+        document.getElementById('save-profile-btn').addEventListener('click', async () => {
+            if(!currentUserUid) return;
+            const btn = document.getElementById('save-profile-btn');
+            btn.textContent = "Saving...";
+            
+            const profileData = {
+                name: document.getElementById('profile-name').value.trim(),
+                phone: document.getElementById('profile-phone').value.trim(),
+                bloodGroup: document.getElementById('profile-blood').value,
+                state: document.getElementById('profile-state').value.trim(),
+                updatedAt: serverTimestamp()
+            };
+
+            try {
+                await setDoc(doc(db, "users", currentUserUid), profileData, { merge: true });
+                document.getElementById('display-profile-name').textContent = profileData.name || "User";
+                btn.textContent = "Profile Saved!";
+                btn.classList.replace('bg-indigo-600', 'bg-green-600');
+                setTimeout(() => { 
+                    btn.textContent = "Save Profile Details"; 
+                    btn.classList.replace('bg-green-600', 'bg-indigo-600'); 
+                }, 2000);
+            } catch(e) { 
+                alert("Failed to save profile"); 
+                btn.textContent = "Save Profile Details"; 
+            }
+        });
+
+        // Load Vehicle Database & Handle Startup Sync
         async function loadUserVehicle(uid) {
             try {
                 const q = query(collection(db, "vehicles"), where("ownerUid", "==", uid));
@@ -388,7 +487,7 @@
                 if (querySnapshot.empty) {
                     document.getElementById('setup-card').classList.remove('hidden');
                     document.getElementById('active-tag-card').classList.add('hidden');
-                    switchTab('view-vehicle'); // Force them to vehicle setup
+                    window.switchTab('view-vehicle'); // No vehicle? Force to setup tab
                 } else {
                     document.getElementById('setup-card').classList.add('hidden');
                     document.getElementById('active-tag-card').classList.remove('hidden');
@@ -409,6 +508,9 @@
                     document.getElementById('sos-email').value = data.emergencyEmail || "";
 
                     startListeningForAlerts(activeVehicleId);
+                    
+                    // Fixed: Start on the dashboard if everything is correctly registered
+                    window.switchTab('view-dashboard');
                 }
             } catch (error) { console.error("Error loading:", error); }
         }
@@ -428,7 +530,6 @@
                     createdAt: serverTimestamp()
                 });
                 await loadUserVehicle(auth.currentUser.uid);
-                switchTab('view-dashboard');
             } catch (error) { 
                 console.error(error); alert("Error saving."); 
                 document.getElementById('generate-btn').textContent = "Create Tag";
