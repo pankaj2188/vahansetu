@@ -1,8 +1,8 @@
 {
   "name": "VahanSetu Workspace",
   "short_name": "VahanSetu",
-  "start_url": "pankaj2188.github.io/vahansetu/index.html",
-  "scope": "/vahansetu/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#4f46e5",
