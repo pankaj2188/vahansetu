@@ -78,7 +78,20 @@
 </head>
 <body class="text-gray-800">
 
-    <div id="print-sticker-wrapper"><div id="print-card"><h1 class="print-header">VahanSetu</h1><p class="print-sub">Smart Vehicle Tag</p><div class="qr-wrapper"><img id="print-qr-img" src="" alt="VahanSetu QR" style="width: 200px; height: 200px;"></div><div><div id="print-vehicle-num" class="print-plate">BR-01-AB-1234</div></div><hr style="margin: 15px 0 20px; border: 0; border-top: 2px dashed #c7d2fe;"><p class="print-text">Is this vehicle parked wrong?</p><p class="print-hindi">क्या यह वाहन गलत जगह पार्क है?</p><div class="print-footer">Scan to alert owner securely<br><span style="font-size: 11px; font-weight: 700; color: #059669;">मालिक को अलर्ट करने के लिए स्कैन करें</span></div><p class="print-promo">Get your free smart tag at: <strong>vahansetu.blogspot.com</strong></p></div></div>
+    <div id="print-sticker-wrapper">
+        <div id="print-card">
+            <h1 class="print-header">VahanSetu</h1>
+            <p class="print-sub">Smart Vehicle Tag</p>
+            <div class="qr-wrapper"><img id="print-qr-img" src="" alt="VahanSetu QR" style="width: 200px; height: 200px;"></div>
+            <div><div id="print-vehicle-num" class="print-plate">BR-01-AB-1234</div></div>
+            <hr style="margin: 15px 0 20px; border: 0; border-top: 2px dashed #c7d2fe;">
+            <p class="print-text">Is this vehicle parked wrong?</p>
+            <p class="print-hindi">क्या यह वाहन गलत जगह पार्क है?</p>
+            <div class="print-footer">Scan to alert owner securely<br><span style="font-size: 11px; font-weight: 700; color: #059669;">मालिक को अलर्ट करने के लिए स्कैन करें</span></div>
+            <p class="print-promo">Get your free smart tag at: <strong>vahansetu.blogspot.com</strong></p>
+        </div>
+    </div>
+
     <!-- (Print Pages omitted to keep snippet clean - your CSS handles it all perfectly above) -->
 
     <div id="login-section" class="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4">
@@ -170,6 +183,15 @@
                     <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 mt-2">Selected Vehicle Details</p>
                     <div class="w-full max-w-xs mx-auto flex flex-col items-center mb-6">
                         <h2 id="display-veh-num" class="text-3xl font-black text-gray-900 tracking-widest uppercase bg-gray-50 px-4 py-3 rounded-xl border border-gray-200 w-full text-center"></h2>
+                        <div id="edit-veh-container" class="mt-2 w-full hidden flex-col items-center">
+                            <div class="flex w-full gap-2">
+                                <input type="text" id="edit-veh-input" class="w-full border border-gray-300 p-2 rounded-lg text-sm uppercase font-bold text-center focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="New Number">
+                                <button id="save-veh-btn" class="bg-indigo-600 text-white font-bold py-2 px-3 rounded-lg text-sm">Save</button>
+                                <button id="cancel-veh-btn" class="bg-gray-200 text-gray-800 font-bold py-2 px-3 rounded-lg text-sm">X</button>
+                            </div>
+                            <p id="edit-limit-text" class="text-[10px] text-gray-500 mt-2 font-semibold"></p>
+                        </div>
+                        <button id="show-edit-btn" class="text-[11px] text-indigo-600 font-bold mt-2 hover:underline hidden">Fix Vehicle Number</button>
                     </div>
                     <div class="flex justify-center mb-6"><div id="qrcode" class="p-4 bg-white border border-gray-200 rounded-2xl shadow-sm"></div></div>
                     <button id="print-btn" class="max-w-xs mx-auto w-full bg-gray-900 hover:bg-black text-white font-bold py-4 px-4 rounded-xl shadow-lg transition flex justify-center items-center gap-2">Print Premium Tag</button>
@@ -182,7 +204,10 @@
                 <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                     <p class="text-sm text-gray-500 mb-6">These settings apply to the currently selected vehicle.</p>
                     <div class="space-y-6">
-                        <div><label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">📧 Primary Email</label><input type="email" id="route-email" placeholder="driver@gmail.com" class="w-full border border-gray-200 p-3 rounded-xl text-sm focus:border-indigo-500 outline-none"></div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">📧 Primary Email</label>
+                            <input type="email" id="route-email" placeholder="driver@gmail.com" class="w-full border border-gray-200 p-3 rounded-xl text-sm focus:border-indigo-500 outline-none">
+                        </div>
                         <div class="border-t border-gray-100 pt-6">
                             <label class="block text-sm font-bold text-blue-900 mb-2">Connect Telegram Alerts</label>
                             <div class="bg-blue-50 p-5 rounded-2xl border border-blue-100">
@@ -217,22 +242,33 @@
                 <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                     <div class="flex items-center gap-4 mb-8 pb-6 border-b border-gray-100">
                         <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-700 text-2xl font-bold border-2 border-indigo-200 shadow-sm">👤</div>
-                        <div><h3 id="display-profile-name" class="text-xl font-bold text-gray-900">Loading...</h3><p id="display-profile-email" class="text-sm text-gray-500">Loading...</p></div>
+                        <div>
+                            <h3 id="display-profile-name" class="text-xl font-bold text-gray-900">Loading...</h3>
+                            <p id="display-profile-email" class="text-sm text-gray-500">Loading...</p>
+                        </div>
                     </div>
                     <div class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div><label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Full Name</label><input type="text" id="profile-name" class="w-full border border-gray-200 p-3 rounded-xl text-sm"></div>
-                            <div><label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Phone Number</label><input type="tel" id="profile-phone" class="w-full border border-gray-200 p-3 rounded-xl text-sm"></div>
+                            <div><label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Full Name</label><input type="text" id="profile-name" class="w-full border border-gray-200 p-3 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"></div>
+                            <div><label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Phone Number</label><input type="tel" id="profile-phone" class="w-full border border-gray-200 p-3 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Blood Group</label>
+                                <select id="profile-blood" class="w-full border border-gray-200 p-3 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                                    <option value="" disabled selected>Select Blood Group</option><option value="A+">A+</option><option value="A-">A-</option><option value="B+">B+</option><option value="B-">B-</option><option value="O+">O+</option><option value="O-">O-</option><option value="AB+">AB+</option><option value="AB-">AB-</option>
+                                </select>
+                            </div>
+                            <div><label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">State / Location</label><input type="text" id="profile-state" class="w-full border border-gray-200 p-3 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"></div>
                         </div>
                         <button id="save-profile-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-xl shadow-md transition mt-2">Save Profile Details</button>
                     </div>
                     <div class="border-t border-gray-100 pt-8 mt-8">
-                        <button id="logout-btn" class="w-full max-w-sm mx-auto block bg-red-50 hover:bg-red-100 text-red-600 font-bold py-4 px-6 rounded-xl transition border border-red-100">Sign Out</button>
+                        <button id="logout-btn" class="w-full max-w-sm mx-auto block bg-red-50 hover:bg-red-100 text-red-600 font-bold py-4 px-6 rounded-xl transition border border-red-100">Sign Out of VahanSetu</button>
                     </div>
                 </div>
             </div>
 
-            <!-- VIEW 6: DONATE TAB (UPGRADED WITH UPI DEEP LINK) -->
+            <!-- VIEW 6: DONATE TAB (WITH UPI DEEP LINK) -->
             <div id="view-donate" class="app-view max-w-4xl mx-auto">
                 <h2 class="text-2xl font-bold text-gray-900 mb-6">Support VahanSetu</h2>
                 <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-center">
@@ -242,7 +278,6 @@
                     
                     <input type="number" id="donate-amount-workspace" placeholder="Enter Amount (₹)" class="w-full max-w-xs mx-auto block border-2 border-gray-200 p-4 rounded-xl text-xl font-black text-center text-gray-800 mb-6 focus:border-pink-500 outline-none transition">
                     
-                    <!-- Redesigned QR / Deep Link Area -->
                     <div class="flex flex-col justify-center items-center mb-4 min-h-[260px]">
                         <div id="donate-qrcode-workspace" class="p-4 bg-white border-2 border-gray-100 rounded-3xl shadow-md flex items-center justify-center mb-4">
                             <span class="text-gray-300 text-sm font-bold">QR will appear here</span>
@@ -265,10 +300,12 @@
             <button onclick="window.switchTab('view-vehicle')" id="mob-nav-vehicle" class="mobile-nav-item flex flex-col items-center p-2 text-gray-400"><span class="text-xl mb-1">🚘</span><span class="text-[10px] font-bold">Garage</span></button>
             <button onclick="window.switchTab('view-routing')" id="mob-nav-routing" class="mobile-nav-item flex flex-col items-center p-2 text-gray-400"><span class="text-xl mb-1">🔀</span><span class="text-[10px] font-bold">Route</span></button>
             <button onclick="window.switchTab('view-sos')" id="mob-nav-sos" class="mobile-nav-item flex flex-col items-center p-2 text-gray-400"><span class="text-xl mb-1">🚨</span><span class="text-[10px] font-bold">SOS</span></button>
+            <button onclick="window.switchTab('view-profile')" id="mob-nav-profile" class="mobile-nav-item flex flex-col items-center p-2 text-gray-400"><span class="text-xl mb-1">👤</span><span class="text-[10px] font-bold">Profile</span></button>
             <button onclick="window.switchTab('view-donate')" id="mob-nav-donate" class="mobile-nav-item flex flex-col items-center p-2 text-gray-400"><span class="text-xl mb-1">💖</span><span class="text-[10px] font-bold">Donate</span></button>
         </nav>
     </div>
 
+    <!-- FULL FIREBASE & LOGIC SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
@@ -295,40 +332,58 @@
         let currentUserUid = null;
         let userVehiclesArray = [];
 
-        // --- REGISTER SERVICE WORKER FOR BACKGROUND PUSH ---
+        // 1. REGISTER SERVICE WORKER FOR BACKGROUND PUSH
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').then(function(registration) {
-                console.log('ServiceWorker registration successful');
+                console.log('ServiceWorker registered successfully.');
             }).catch(function(err) {
                 console.log('ServiceWorker registration failed: ', err);
             });
         }
 
-        // --- PWA LOGIC ---
+        // 2. PWA INSTALL BANNER LOGIC
         let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; document.getElementById('pwa-install-banner').classList.remove('hidden'); });
-        document.getElementById('install-pwa-btn').addEventListener('click', async () => { if (deferredPrompt) { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === 'accepted') document.getElementById('pwa-install-banner').classList.add('hidden'); deferredPrompt = null; } });
+        window.addEventListener('beforeinstallprompt', (e) => { 
+            e.preventDefault(); 
+            deferredPrompt = e; 
+            document.getElementById('pwa-install-banner').classList.remove('hidden'); 
+        });
+        document.getElementById('install-pwa-btn').addEventListener('click', async () => { 
+            if (deferredPrompt) { 
+                deferredPrompt.prompt(); 
+                const { outcome } = await deferredPrompt.userChoice; 
+                if (outcome === 'accepted') {
+                    document.getElementById('pwa-install-banner').classList.add('hidden'); 
+                }
+                deferredPrompt = null; 
+            } 
+        });
 
-        // --- SPA LOGIC ---
+        // 3. SPA VIEW SWITCHER
         window.switchTab = function(tabId) {
             document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
+            
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             const desktopNavId = tabId.replace('view-', 'nav-');
             if(document.getElementById(desktopNavId)) document.getElementById(desktopNavId).classList.add('active');
+            
             document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.remove('active'));
             const mobileNavId = tabId.replace('view-', 'mob-nav-');
             if(document.getElementById(mobileNavId)) document.getElementById(mobileNavId).classList.add('active');
         };
 
+        // 4. AUTHENTICATION
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUserUid = user.uid;
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
+                
                 document.getElementById('display-profile-name').textContent = user.displayName;
                 document.getElementById('display-profile-email').textContent = user.email;
                 document.getElementById('profile-name').value = user.displayName;
+                
                 await loadUserProfile(user.uid);
                 await loadUserVehicles(user.uid); 
             } else {
@@ -342,37 +397,295 @@
         document.getElementById('login-btn').addEventListener('click', async () => await signInWithPopup(auth, provider));
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
 
-        // --- DB LOGIC OMITTED FOR BREVITY, KEPT SAME AS PREVIOUS ---
+        // 5. PROFILE DATABASE ACTIONS
         async function loadUserProfile(uid) {
-            try { const docSnap = await getDoc(doc(db, "users", uid)); if (docSnap.exists()) { const data = docSnap.data(); if(data.name) { document.getElementById('profile-name').value = data.name; document.getElementById('display-profile-name').textContent = data.name; } if(data.phone) document.getElementById('profile-phone').value = data.phone; if(data.bloodGroup) document.getElementById('profile-blood').value = data.bloodGroup; if(data.state) document.getElementById('profile-state').value = data.state; } } catch(e) {}
+            try {
+                const docSnap = await getDoc(doc(db, "users", uid));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if(data.name) { 
+                        document.getElementById('profile-name').value = data.name; 
+                        document.getElementById('display-profile-name').textContent = data.name; 
+                    }
+                    if(data.phone) document.getElementById('profile-phone').value = data.phone;
+                    if(data.bloodGroup) document.getElementById('profile-blood').value = data.bloodGroup;
+                    if(data.state) document.getElementById('profile-state').value = data.state;
+                }
+            } catch(e) {
+                console.error("Profile load failed", e);
+            }
         }
-        document.getElementById('save-profile-btn').addEventListener('click', async () => { if(!currentUserUid) return; const btn = document.getElementById('save-profile-btn'); btn.textContent = "Saving..."; const profileData = { name: document.getElementById('profile-name').value.trim(), phone: document.getElementById('profile-phone').value.trim(), bloodGroup: document.getElementById('profile-blood').value, state: document.getElementById('profile-state').value.trim(), updatedAt: serverTimestamp() }; try { await setDoc(doc(db, "users", currentUserUid), profileData, { merge: true }); document.getElementById('display-profile-name').textContent = profileData.name || "User"; btn.textContent = "Profile Saved!"; btn.classList.replace('bg-indigo-600', 'bg-green-600'); setTimeout(() => { btn.textContent = "Save Profile Details"; btn.classList.replace('bg-green-600', 'bg-indigo-600'); }, 2000); } catch(e) { alert("Failed"); btn.textContent = "Save Profile Details"; } });
-        
+
+        document.getElementById('save-profile-btn').addEventListener('click', async () => {
+            if(!currentUserUid) return;
+            const btn = document.getElementById('save-profile-btn'); 
+            btn.textContent = "Saving...";
+            
+            const profileData = { 
+                name: document.getElementById('profile-name').value.trim(), 
+                phone: document.getElementById('profile-phone').value.trim(), 
+                bloodGroup: document.getElementById('profile-blood').value, 
+                state: document.getElementById('profile-state').value.trim(), 
+                updatedAt: serverTimestamp() 
+            };
+            
+            try {
+                await setDoc(doc(db, "users", currentUserUid), profileData, { merge: true });
+                document.getElementById('display-profile-name').textContent = profileData.name || "User";
+                btn.textContent = "Profile Saved!"; 
+                btn.classList.replace('bg-indigo-600', 'bg-green-600');
+                setTimeout(() => { 
+                    btn.textContent = "Save Profile Details"; 
+                    btn.classList.replace('bg-green-600', 'bg-indigo-600'); 
+                }, 2000);
+            } catch(e) { 
+                alert("Failed to save profile"); 
+                btn.textContent = "Save Profile Details"; 
+            } 
+        });
+
+        // 6. MULTI-VEHICLE GARAGE ACTIONS
         async function loadUserVehicles(uid) {
             try {
                 const q = query(collection(db, "vehicles"), where("ownerUid", "==", uid));
                 const querySnapshot = await getDocs(q);
-                if (querySnapshot.empty) { document.getElementById('setup-card').classList.remove('hidden'); document.getElementById('active-tag-card').classList.add('hidden'); document.getElementById('global-vehicle-selector-container').classList.add('hidden'); window.switchTab('view-vehicle'); } else { userVehiclesArray = []; const selector = document.getElementById('global-vehicle-selector'); selector.innerHTML = ''; querySnapshot.forEach((doc) => { const data = doc.data(); data.id = doc.id; userVehiclesArray.push(data); const option = document.createElement('option'); option.value = data.id; option.textContent = data.vehicleNumber; selector.appendChild(option); }); document.getElementById('setup-card').classList.add('hidden'); document.getElementById('active-tag-card').classList.remove('hidden'); document.getElementById('global-vehicle-selector-container').classList.remove('hidden'); selectActiveVehicle(userVehiclesArray[0].id); window.switchTab('view-dashboard'); }
-            } catch (error) { console.error(error); }
-        }
-        function selectActiveVehicle(vid) { const data = userVehiclesArray.find(v => v.id === vid); if(!data) return; activeVehicleId = data.id; currentEditCount = data.editCount || 0; document.getElementById('display-veh-num').textContent = data.vehicleNumber; renderQRCode(activeVehicleId); document.getElementById('route-email').value = data.alertEmail || auth.currentUser.email; document.getElementById('route-telegram').value = data.telegramChatId || ""; document.getElementById('sos-email').value = data.emergencyEmail || ""; startListeningForAlerts(activeVehicleId); }
-        document.getElementById('global-vehicle-selector').addEventListener('change', (e) => selectActiveVehicle(e.target.value));
-        document.getElementById('generate-btn').addEventListener('click', async () => { const vehicleNum = document.getElementById('new-vehicle-number').value.trim().toUpperCase(); if (!vehicleNum) return alert("Enter vehicle number."); document.getElementById('generate-btn').textContent = "Saving..."; try { const uniqueId = crypto.randomUUID(); await setDoc(doc(db, "vehicles", uniqueId), { vehicleNumber: vehicleNum, ownerUid: auth.currentUser.uid, alertEmail: auth.currentUser.email, editCount: 0, createdAt: serverTimestamp() }); document.getElementById('generate-btn').textContent = "Create Tag"; document.getElementById('new-vehicle-number').value = ''; await loadUserVehicles(auth.currentUser.uid); } catch (error) { alert("Error saving."); document.getElementById('generate-btn').textContent = "Create Tag"; } });
-        document.getElementById('save-routing-btn').addEventListener('click', async () => { const btn = document.getElementById('save-routing-btn'); btn.textContent = "Saving..."; try { await setDoc(doc(db, "vehicles", activeVehicleId), { alertEmail: document.getElementById('route-email').value.trim(), telegramChatId: document.getElementById('route-telegram').value.trim(), updatedAt: serverTimestamp() }, { merge: true }); btn.textContent = "Saved Successfully!"; btn.classList.replace('bg-indigo-600', 'bg-green-600'); setTimeout(() => { btn.textContent = "Save Routing Updates"; btn.classList.replace('bg-green-600', 'bg-indigo-600'); }, 2000); } catch (e) { alert("Error"); btn.textContent = "Save Routing Updates"; } });
-        document.getElementById('save-sos-btn').addEventListener('click', async () => { const btn = document.getElementById('save-sos-btn'); btn.textContent = "Saving..."; try { await setDoc(doc(db, "vehicles", activeVehicleId), { emergencyEmail: document.getElementById('sos-email').value.trim(), updatedAt: serverTimestamp() }, { merge: true }); btn.textContent = "Emergency Target Saved!"; btn.classList.replace('bg-red-600', 'bg-green-600'); setTimeout(() => { btn.textContent = "Save Emergency Target"; btn.classList.replace('bg-green-600', 'bg-red-600'); }, 2000); } catch (e) { alert("Error"); btn.textContent = "Save Emergency Target"; } });
-        function renderQRCode(id) { const qrcodeDiv = document.getElementById('qrcode'); qrcodeDiv.innerHTML = ""; new QRCode(qrcodeDiv, { text: `https://pankaj2188.github.io/vahansetu/scan.html?id=${id}`, width: 180, height: 180, colorDark : "#111827", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H }); }
 
+                if (querySnapshot.empty) {
+                    document.getElementById('setup-card').classList.remove('hidden');
+                    document.getElementById('active-tag-card').classList.add('hidden');
+                    document.getElementById('global-vehicle-selector-container').classList.add('hidden');
+                    document.getElementById('show-setup-btn').classList.add('hidden');
+                    window.switchTab('view-vehicle');
+                } else {
+                    userVehiclesArray = [];
+                    const selector = document.getElementById('global-vehicle-selector');
+                    selector.innerHTML = '';
+
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data(); 
+                        data.id = doc.id; 
+                        userVehiclesArray.push(data);
+                        
+                        const option = document.createElement('option'); 
+                        option.value = data.id; 
+                        option.textContent = data.vehicleNumber; 
+                        selector.appendChild(option);
+                    });
+
+                    document.getElementById('setup-card').classList.add('hidden');
+                    document.getElementById('active-tag-card').classList.remove('hidden');
+                    document.getElementById('global-vehicle-selector-container').classList.remove('hidden');
+                    document.getElementById('show-setup-btn').classList.remove('hidden');
+                    
+                    selectActiveVehicle(userVehiclesArray[0].id);
+                    window.switchTab('view-dashboard');
+                }
+            } catch (error) { 
+                console.error(error); 
+            }
+        }
+
+        function selectActiveVehicle(vid) {
+            const data = userVehiclesArray.find(v => v.id === vid);
+            if(!data) return;
+            
+            activeVehicleId = data.id; 
+            currentEditCount = data.editCount || 0;
+            
+            document.getElementById('display-veh-num').textContent = data.vehicleNumber;
+            document.getElementById('print-vehicle-num').textContent = data.vehicleNumber;
+            renderQRCode(activeVehicleId); 
+            updateEditUI(); 
+            
+            document.getElementById('route-email').value = data.alertEmail || auth.currentUser.email;
+            document.getElementById('route-telegram').value = data.telegramChatId || "";
+            document.getElementById('sos-email').value = data.emergencyEmail || "";
+            
+            startListeningForAlerts(activeVehicleId);
+        }
+
+        document.getElementById('global-vehicle-selector').addEventListener('change', (e) => selectActiveVehicle(e.target.value));
+
+        document.getElementById('show-setup-btn').addEventListener('click', () => { 
+            document.getElementById('setup-card').classList.remove('hidden'); 
+            document.getElementById('cancel-setup-btn').classList.remove('hidden'); 
+            document.getElementById('active-tag-card').classList.add('hidden'); 
+        });
+
+        document.getElementById('cancel-setup-btn').addEventListener('click', () => { 
+            document.getElementById('setup-card').classList.add('hidden'); 
+            document.getElementById('active-tag-card').classList.remove('hidden'); 
+        });
+
+        document.getElementById('generate-btn').addEventListener('click', async () => {
+            const vehicleNum = document.getElementById('new-vehicle-number').value.trim().toUpperCase();
+            if (!vehicleNum) return alert("Enter vehicle number.");
+            
+            document.getElementById('generate-btn').textContent = "Saving...";
+            
+            try {
+                const uniqueId = crypto.randomUUID();
+                await setDoc(doc(db, "vehicles", uniqueId), { 
+                    vehicleNumber: vehicleNum, 
+                    ownerUid: auth.currentUser.uid, 
+                    alertEmail: auth.currentUser.email, 
+                    editCount: 0, 
+                    createdAt: serverTimestamp() 
+                });
+                document.getElementById('generate-btn').textContent = "Create Tag"; 
+                document.getElementById('new-vehicle-number').value = '';
+                await loadUserVehicles(auth.currentUser.uid);
+            } catch (error) { 
+                alert("Error saving."); 
+                document.getElementById('generate-btn').textContent = "Create Tag"; 
+            }
+        });
+
+        function updateEditUI() {
+            const editBtn = document.getElementById('show-edit-btn'); 
+            const limitText = document.getElementById('edit-limit-text');
+            if (currentEditCount >= 2) { 
+                editBtn.classList.add('hidden'); 
+            } else { 
+                editBtn.classList.remove('hidden'); 
+                limitText.textContent = `Edits remaining: ${2 - currentEditCount}`; 
+            }
+        }
+
+        document.getElementById('show-edit-btn').addEventListener('click', () => { 
+            document.getElementById('display-veh-num').classList.add('hidden'); 
+            document.getElementById('show-edit-btn').classList.add('hidden'); 
+            document.getElementById('edit-veh-container').classList.remove('hidden'); 
+            document.getElementById('edit-veh-container').classList.add('flex'); 
+            document.getElementById('edit-veh-input').value = document.getElementById('display-veh-num').textContent; 
+        });
+
+        document.getElementById('cancel-veh-btn').addEventListener('click', () => { 
+            document.getElementById('display-veh-num').classList.remove('hidden'); 
+            document.getElementById('edit-veh-container').classList.add('hidden'); 
+            document.getElementById('edit-veh-container').classList.remove('flex'); 
+            updateEditUI(); 
+        });
+
+        document.getElementById('save-veh-btn').addEventListener('click', async () => {
+            const newNum = document.getElementById('edit-veh-input').value.trim().toUpperCase();
+            if (!newNum) return alert("Enter a valid vehicle number.");
+            if (currentEditCount >= 2) return alert("Maximum edit limit reached."); 
+            
+            const btn = document.getElementById('save-veh-btn'); 
+            btn.textContent = "...";
+            
+            try {
+                const newCount = currentEditCount + 1; 
+                await setDoc(doc(db, "vehicles", activeVehicleId), { 
+                    vehicleNumber: newNum, 
+                    editCount: newCount, 
+                    updatedAt: serverTimestamp() 
+                }, { merge: true });
+                
+                document.getElementById('display-veh-num').textContent = newNum; 
+                document.getElementById('print-vehicle-num').textContent = newNum; 
+                currentEditCount = newCount;
+                
+                const selector = document.getElementById('global-vehicle-selector'); 
+                selector.options[selector.selectedIndex].text = newNum;
+                
+                document.getElementById('display-veh-num').classList.remove('hidden'); 
+                document.getElementById('edit-veh-container').classList.add('hidden'); 
+                document.getElementById('edit-veh-container').classList.remove('flex'); 
+                updateEditUI(); 
+                btn.textContent = "Save";
+            } catch (e) { 
+                alert("Failed."); 
+                btn.textContent = "Save"; 
+            }
+        });
+
+        // 7. ROUTING & SOS ACTIONS
+        document.getElementById('save-routing-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('save-routing-btn'); 
+            btn.textContent = "Saving...";
+            
+            try {
+                await setDoc(doc(db, "vehicles", activeVehicleId), { 
+                    alertEmail: document.getElementById('route-email').value.trim(), 
+                    telegramChatId: document.getElementById('route-telegram').value.trim(), 
+                    updatedAt: serverTimestamp() 
+                }, { merge: true });
+                
+                btn.textContent = "Saved Successfully!"; 
+                btn.classList.replace('bg-indigo-600', 'bg-green-600'); 
+                setTimeout(() => { 
+                    btn.textContent = "Save Routing Updates"; 
+                    btn.classList.replace('bg-green-600', 'bg-indigo-600'); 
+                }, 2000);
+            } catch (e) { 
+                alert("Error saving routing."); 
+                btn.textContent = "Save Routing Updates"; 
+            }
+        });
+
+        document.getElementById('save-sos-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('save-sos-btn'); 
+            btn.textContent = "Saving...";
+            
+            try {
+                await setDoc(doc(db, "vehicles", activeVehicleId), { 
+                    emergencyEmail: document.getElementById('sos-email').value.trim(), 
+                    updatedAt: serverTimestamp() 
+                }, { merge: true });
+                
+                btn.textContent = "Emergency Target Saved!"; 
+                btn.classList.replace('bg-red-600', 'bg-green-600'); 
+                setTimeout(() => { 
+                    btn.textContent = "Save Emergency Target"; 
+                    btn.classList.replace('bg-green-600', 'bg-red-600'); 
+                }, 2000);
+            } catch (e) { 
+                alert("Error saving SOS."); 
+                btn.textContent = "Save Emergency Target"; 
+            }
+        });
+
+        // 8. QR CODE PRINTING
+        function renderQRCode(id) {
+            const qrcodeDiv = document.getElementById('qrcode'); 
+            qrcodeDiv.innerHTML = "";
+            new QRCode(qrcodeDiv, { 
+                text: `https://pankaj2188.github.io/vahansetu/scan.html?id=${id}`, 
+                width: 180, 
+                height: 180, 
+                colorDark : "#111827", 
+                colorLight : "#ffffff", 
+                correctLevel : QRCode.CorrectLevel.H 
+            });
+        }
+
+        document.getElementById('print-btn').addEventListener('click', () => {
+            const canvas = document.getElementById('qrcode').querySelector('canvas');
+            if (canvas) document.getElementById('print-qr-img').src = canvas.toDataURL("image/png");
+            setTimeout(() => { window.print(); }, 300);
+        });
+
+        // 9. BROWSER PUSH PERMISSIONS
         document.getElementById('enable-push-btn').addEventListener('click', async () => {
             try {
                 const permission = await Notification.requestPermission();
-                if (permission === 'granted') { document.getElementById('enable-push-btn').classList.add('hidden'); document.getElementById('push-status').classList.remove('hidden'); } 
-                else { alert("Please allow notifications in your browser settings."); }
-            } catch (e) { console.error(e); }
+                if (permission === 'granted') {
+                    document.getElementById('enable-push-btn').classList.add('hidden');
+                    document.getElementById('push-status').classList.remove('hidden');
+                } else {
+                    alert("Please allow notifications in your browser settings.");
+                }
+            } catch (e) {
+                console.error(e);
+            }
         });
 
-        // --- UPGRADED BACKGROUND PUSH ALERTS ---
+        // 10. BACKGROUND PUSH ALERTS & MAP LOGIC
         function startListeningForAlerts(vehicleId) {
             if(unsubscribeAlerts) unsubscribeAlerts(); 
+            
             const q = query(collection(db, "alerts"), where("vehicleId", "==", vehicleId));
             
             unsubscribeAlerts = onSnapshot(q, (snapshot) => {
@@ -384,7 +697,7 @@
                     if (change.type === "added" && !isInitialLoad) {
                         const newAlert = change.doc.data();
                         
-                        // DELEGATE NOTIFICATION TO SERVICE WORKER FOR BACKGROUND SUPPORT
+                        // NOTIFY VIA SERVICE WORKER FOR BACKGROUND SUPPORT
                         if (Notification.permission === "granted" && 'serviceWorker' in navigator) {
                             navigator.serviceWorker.ready.then(function(registration) {
                                 registration.showNotification(`VahanSetu: ${newAlert.vehicleNumber}`, { 
@@ -399,44 +712,69 @@
                 });
 
                 isInitialLoad = false;
-                const today = new Date(); let html = ''; let todayCount = 0;
+                
+                const today = new Date(); 
+                let html = ''; 
+                let todayCount = 0;
 
                 alerts.forEach(alert => {
                     const dateObj = alert.createdAt ? alert.createdAt.toDate() : new Date();
-                    const isToday = dateObj.getDate() === today.getDate() && dateObj.getMonth() === today.getMonth() && dateObj.getFullYear() === today.getFullYear();
+                    
+                    // Filter: Today Only
+                    const isToday = dateObj.getDate() === today.getDate() && 
+                                    dateObj.getMonth() === today.getMonth() && 
+                                    dateObj.getFullYear() === today.getFullYear();
 
                     if (isToday) {
                         todayCount++;
                         const isAccident = alert.issue.includes("ACCIDENT");
                         const bgClass = isAccident ? "bg-red-600 text-white" : "bg-red-50 text-red-700";
                         const borderClass = isAccident ? "border-red-800" : "border-red-500";
+                        
                         const dateStr = dateObj.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
                         const timeStr = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
                         let mapEmbed = '';
                         if (alert.locationUrl) {
                             const coordsMatch = alert.locationUrl.match(/q=([\d.-]+,[\d.-]+)/);
-                            if (coordsMatch && coordsMatch[1]) { mapEmbed = `<div class="mt-4 rounded-xl overflow-hidden border ${isAccident ? 'border-red-500' : 'border-red-200'} shadow-sm"><iframe width="100%" height="150" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=${coordsMatch[1]}&hl=en&z=15&output=embed"></iframe></div><a href="${alert.locationUrl}" target="_blank" class="text-[10px] font-bold ${isAccident ? 'text-white underline' : 'text-red-700 hover:underline'} mt-2 inline-block">📍 Open Full Map</a>`; }
+                            if (coordsMatch && coordsMatch[1]) { 
+                                mapEmbed = `
+                                <div class="mt-4 rounded-xl overflow-hidden border ${isAccident ? 'border-red-500' : 'border-red-200'} shadow-sm">
+                                    <iframe width="100%" height="150" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=${coordsMatch[1]}&hl=en&z=15&output=embed"></iframe>
+                                </div>
+                                <a href="${alert.locationUrl}" target="_blank" class="text-[10px] font-bold ${isAccident ? 'text-white underline' : 'text-red-700 hover:underline'} mt-2 inline-block">📍 Open Full Map</a>`; 
+                            }
                         }
 
-                        html += `<div class="${bgClass} border-l-4 ${borderClass} p-5 rounded-2xl shadow-sm mb-4"><div class="flex justify-between items-start mb-2"><span class="font-bold uppercase ${isAccident ? 'text-white' : 'text-gray-900'}">${isAccident ? '🚨 URGENT SOS' : 'Parking Alert'}</span><span class="text-xs opacity-80 text-right ml-2 whitespace-nowrap">${dateStr} • ${timeStr}</span></div><p class="text-sm font-semibold mt-2">${alert.issue}</p>${mapEmbed}</div>`;
+                        html += `
+                        <div class="${bgClass} border-l-4 ${borderClass} p-5 rounded-2xl shadow-sm mb-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-bold uppercase ${isAccident ? 'text-white' : 'text-gray-900'}">${isAccident ? '🚨 URGENT SOS' : 'Parking Alert'}</span>
+                                <span class="text-xs opacity-80 text-right ml-2 whitespace-nowrap">${dateStr} • ${timeStr}</span>
+                            </div>
+                            <p class="text-sm font-semibold mt-2">${alert.issue}</p>
+                            ${mapEmbed}
+                        </div>`;
                     }
                 });
 
                 if (todayCount === 0) {
-                    document.getElementById('alert-badge').classList.add('hidden'); document.getElementById('alerts-list').innerHTML = '<p class="text-sm text-gray-400 text-center py-6">No alerts today. Your vehicle is safe.</p>';
+                    document.getElementById('alert-badge').classList.add('hidden'); 
+                    document.getElementById('alerts-list').innerHTML = '<p class="text-sm text-gray-400 text-center py-6">No alerts today. Your vehicle is safe.</p>';
                 } else {
-                    document.getElementById('alert-badge').classList.remove('hidden'); document.getElementById('alerts-list').innerHTML = html;
+                    document.getElementById('alert-badge').classList.remove('hidden'); 
+                    document.getElementById('alerts-list').innerHTML = html;
                 }
             });
         }
 
-        // --- DYNAMIC DONATION QR & UPI INTENT GENERATOR ---
+        // 11. DYNAMIC DONATION QR & UPI INTENT GENERATOR
         document.getElementById('donate-amount-workspace').addEventListener('input', (e) => {
             const amount = e.target.value;
             const qrContainer = document.getElementById('donate-qrcode-workspace');
             const upiText = document.getElementById('display-upi-id-workspace');
             const upiBtn = document.getElementById('upi-intent-btn-workspace');
+            
             qrContainer.innerHTML = "";
             
             if(amount > 0) {
@@ -447,7 +785,14 @@
                 const upiString = `upi://pay?pa=${upiId}&pn=Pankaj%20Kumar&cu=INR&am=${amount}`;
                 
                 qrContainer.classList.remove('border-2', 'border-gray-100', 'flex', 'items-center', 'justify-center');
-                new QRCode(qrContainer, { text: upiString, width: 200, height: 200, colorDark : "#111827", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
+                new QRCode(qrContainer, { 
+                    text: upiString, 
+                    width: 200, 
+                    height: 200, 
+                    colorDark : "#111827", 
+                    colorLight : "#ffffff", 
+                    correctLevel : QRCode.CorrectLevel.H 
+                });
                 
                 upiText.textContent = `UPI ID: ${upiId}`;
                 upiText.classList.remove('hidden');
@@ -458,7 +803,9 @@
             } else {
                 qrContainer.classList.add('border-2', 'border-gray-100', 'flex', 'items-center', 'justify-center');
                 qrContainer.innerHTML = '<span class="text-gray-300 text-sm font-bold">QR will appear here</span>';
+                
                 upiText.classList.add('hidden');
+                
                 upiBtn.classList.add('hidden');
                 upiBtn.classList.remove('flex');
             }
