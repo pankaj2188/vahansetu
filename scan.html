@@ -118,6 +118,14 @@
             <p class="text-sm font-bold text-indigo-600 mt-8">Powered by VahanSetu</p>
         </div>
 
+        <!-- AD SPACE / MONETIZATION -->
+        <div class="mt-8 mb-2 w-full text-center">
+            <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-2">Advertisement</p>
+            <div class="w-full h-[90px] bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center">
+                <span class="text-gray-400 font-bold text-sm">Google AdSense Space</span>
+            </div>
+        </div>
+
     </div>
 
     <script type="module">
@@ -156,12 +164,10 @@
         let activeTelegramId = "";
         let emergencyEmail = "";
 
-        // Get Tag ID from URL
         function getTagIdFromUrl() {
             return new URLSearchParams(window.location.search).get('id');
         }
 
-        // Fetch GPS Location with STRICT ANTI-PRANK ENFORCEMENT
         function getGPSLocation() {
             return new Promise((resolve, reject) => {
                 if (!navigator.geolocation) {
@@ -182,7 +188,6 @@
             });
         }
 
-        // Load Vehicle Details
         async function loadVehicleData() {
             const tagId = getTagIdFromUrl();
             if (!tagId) return document.getElementById('error-state').classList.remove('hidden');
@@ -207,9 +212,6 @@
             } catch (e) { alert("Network error."); }
         }
 
-        // -----------------------------------------------------
-        // HANDLE NORMAL PARKING ALERT (Anti-Prank Enabled)
-        // -----------------------------------------------------
         alertForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const issueType = document.getElementById('issue-type').value;
@@ -252,7 +254,8 @@
                         telegramMessage: alertMessage,
                         toEmail: activeDriverEmail,
                         vehicleNumber: displayVehicleNum.textContent,
-                        issue: issueType,
+                        issue: alertMessage, 
+                        emailMessage: alertMessage,
                         mapLink: googleMapsLink
                     })
                 }).catch(err => console.error(err));
@@ -268,9 +271,6 @@
             }
         });
 
-        // -----------------------------------------------------
-        // TOGGLE SOS MENU
-        // -----------------------------------------------------
         sosBtn.addEventListener('click', () => {
             normalAlertsContainer.classList.add('hidden');
             sosExtendedForm.classList.remove('hidden');
@@ -281,9 +281,6 @@
             normalAlertsContainer.classList.remove('hidden');
         });
 
-        // -----------------------------------------------------
-        // HANDLE EMERGENCY SOS CONFIRMATION
-        // -----------------------------------------------------
         confirmSosBtn.addEventListener('click', async () => {
             const stateInput = document.getElementById('state-selector').value;
             if (!stateInput) return alert("Please select a State so we can provide local emergency numbers.");
@@ -305,7 +302,6 @@
             }
 
             try {
-                // Generate Bilingual SOS Message
                 const sosIssueString = `🚨 *ACCIDENT ALERT / दुर्घटना / हादसा अलर्ट! (${stateInput}) 🚨`;
                 const sosPayloadMessage = `🚨 *ACCIDENT ALERT / दुर्घटना / हादसा अलर्ट!*\n\n🚘 *Vehicle / वाहन:* ${displayVehicleNum.textContent}\n⚠️ *URGENT / जरूरी:* Your vehicle has met with an accident! / आपकी गाड़ी का एक्सीडेंट हो गया है!\n📍 *Location / स्थान:* [View GPS / जीपीएस देखें](${googleMapsLink})\n🏥 *State / राज्य:* ${stateInput}\n\n*Note:* The bystander has been given Govt. Emergency Numbers (112, Ambulance, 1073). Please check on your vehicle immediately.\nकृपया तुरंत अपने वाहन की जाँच करें।`;
 
@@ -329,17 +325,16 @@
                         telegramMessage: sosPayloadMessage,
                         toEmail: emergencyEmail, 
                         vehicleNumber: displayVehicleNum.textContent,
-                        issue: sosIssueString,
+                        issue: sosPayloadMessage,
+                        emailMessage: sosPayloadMessage,
                         mapLink: googleMapsLink
                     })
                 }).catch(err => console.error(err));
 
-                // Switch UI to Success State & Show Emergency Box
                 actionState.classList.add('hidden');
                 successState.classList.remove('hidden');
                 emergencyCallBox.classList.remove('hidden');
 
-                // State-Specific Ambulance Dial (Bihar/Delhi often use 102 primarily)
                 if (stateInput === "Bihar" || stateInput === "Delhi") {
                     ambulanceCallBtn.href = "tel:102";
                     ambulanceCallBtn.innerHTML = "🚑 Dial 102 (Ambulance)";
